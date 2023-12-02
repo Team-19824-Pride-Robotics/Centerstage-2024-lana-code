@@ -31,7 +31,6 @@ public class auto_iterative extends OpMode
     public void init() {
         drive.setPoseEstimate(startPose);
         controller = new PIDController(p,i,d);
-        drive.followTrajectoryAsync(trajSeq);
     }
 
     @Override
