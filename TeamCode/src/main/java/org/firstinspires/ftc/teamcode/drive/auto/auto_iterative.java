@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.drive.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -22,9 +24,14 @@ public class auto_iterative extends OpMode
 
 
 
+
+
+    int teamProp;
+
     @Override
     public void init() {
         drive.setPoseEstimate(startPose);
+
     }
 
     @Override
