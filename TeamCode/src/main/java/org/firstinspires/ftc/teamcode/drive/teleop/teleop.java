@@ -73,7 +73,7 @@ public class teleop extends OpMode {
 
     //drone
     Servo drone;
-    public static double launch = .5;
+    public static double launch = .3;
 
 
 
@@ -221,6 +221,9 @@ public class teleop extends OpMode {
             }
             if (gamepad1.start) {
                 bPosx =.99;
+            }
+            if (gamepad1.share) {
+                bPosx =.55;
             }
             if (gamepad2.dpad_down) {
                 target =1100;

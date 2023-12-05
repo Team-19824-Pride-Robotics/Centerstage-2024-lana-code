@@ -30,24 +30,6 @@ public class lift {
     DcMotorEx lift1;
     DcMotorEx lift2;
 
-
-    public static double liftM = 10;
-    public static double liftMax = 2000;
-    //arm
-    public static double pickup = 110;
-
-    double aPos =.01;
-
-    public static double bPosx = .2;
-    ServoImplEx Arm;
-    ServoImplEx bucket;
-    // AnalogInput sEncoder;
-    AnalogInput sEncoder;
-    AnalogInput sEncoder2;
-
-    //drone
-
-
     public lift(HardwareMap hardwareMap) {
         //pid
             controller = new PIDController(p, i, d);
@@ -79,9 +61,13 @@ public class lift {
 
         lift1.setPower(lPower1);
         lift2.setPower(lPower2);
-        Arm.setPosition(aPos);
-        bucket.setPosition(bPosx);
 
+    }
+    public void top(){
+        target = 100;
+    }
+    public void zero(){
+        target = 100;
     }
 
 }

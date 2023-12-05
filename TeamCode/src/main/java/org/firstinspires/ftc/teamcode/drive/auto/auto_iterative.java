@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 public class auto_iterative extends OpMode
 {
+    arm arm = new arm(hardwareMap);
     lift lift = new lift(hardwareMap);
     SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
     Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
@@ -24,7 +25,22 @@ public class auto_iterative extends OpMode
 
     @Override
     public void init() {
+
         drive.setPoseEstimate(startPose);
+
+        TrajectorySequence trajectory = drive.trajectorySequenceBuilder(startPose)
+                .forward(10)
+                .addDisplacementMarker(() -> {
+                    lift.top();
+                })
+                .strafeRight(10)
+                .addDisplacementMarker(() -> {
+                    lift.zero();
+                })
+                .build();
+
+        drive.followTrajectorySequenceAsync(trajectory);
+
     }
 
     @Override
@@ -39,17 +55,15 @@ public class auto_iterative extends OpMode
 
     @Override
     public void loop() {
-        TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                .forward(10)
-                .build();
 
         drive.update();
-
+        lift.update();
     }
 
     @Override
     public void stop() {
 
     }
+
 
 }
