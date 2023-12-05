@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.drive.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -22,6 +24,10 @@ public class auto_iterative extends OpMode
     Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
 
 
+
+
+
+    int teamProp;
 
     @Override
     public void init() {
