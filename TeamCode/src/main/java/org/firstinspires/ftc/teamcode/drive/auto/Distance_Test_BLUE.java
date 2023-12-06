@@ -16,8 +16,8 @@ public class Distance_Test_BLUE extends OpMode{
 
     @Override
     public void init() {
-        distance2 = hardwareMap.get(DistanceSensor.class, "distance2");
-        distance4 = hardwareMap.get(DistanceSensor.class, "distance4");
+        distance1 = hardwareMap.get(DistanceSensor.class, "distance2");
+        distance3 = hardwareMap.get(DistanceSensor.class, "distance4");
 
 
     }
