@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Autonomous(name="auto_iterative_BLUE", group="auto")
-@Disabled
 
 public class auto_iterative_BLUE extends OpMode
 {

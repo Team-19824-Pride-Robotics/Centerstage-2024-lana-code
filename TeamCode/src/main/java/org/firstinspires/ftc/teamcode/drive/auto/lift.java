@@ -21,14 +21,16 @@ import com.qualcomm.robotcore.util.Range;
 public class lift {
 
     //pid
-    private PIDController controller;
+    private static PIDController controller;
     public static double p = 0.005, i = 0, d =0;
     public static double f = 0;
     public static double target = 110;
+    public static double liftpos1;
+    public static double liftpos2;
 
     //lift
-    DcMotorEx lift1;
-    DcMotorEx lift2;
+    static DcMotorEx lift1;
+    static DcMotorEx lift2;
 
     public lift(HardwareMap hardwareMap) {
         //pid
@@ -47,7 +49,7 @@ public class lift {
 
 
 
-    public void update() {
+    public static void update() {
 
         controller.setPID(p, i, d);
         int liftPos1 = lift1.getCurrentPosition();
@@ -61,6 +63,9 @@ public class lift {
 
         lift1.setPower(lPower1);
         lift2.setPower(lPower2);
+
+        liftpos1 = lift1.getCurrentPosition();
+        liftpos2 = lift2.getCurrentPosition();
 
     }
     public void top(){

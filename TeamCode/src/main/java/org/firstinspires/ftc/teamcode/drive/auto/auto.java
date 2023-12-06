@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
@@ -20,27 +21,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 //@Disabled
 public class auto extends LinearOpMode {
 
+    Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
-        drive.setPoseEstimate(startPose);
+lift lift = new lift(hardwareMap);
+SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        DcMotorEx lift1;
-        DcMotorEx lift2;
+        TrajectorySequence trajectory = drive.trajectorySequenceBuilder(startPose)
+                .forward(10)
+                .addDisplacementMarker(lift::top)
+                .strafeRight(10)
+                .addDisplacementMarker(lift::zero)
+                .build();
 
-        lift1 = hardwareMap.get(DcMotorEx.class, "lift1");
-        lift2 = hardwareMap.get(DcMotorEx.class, "lift2");
-
-
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift2.setDirection(DcMotorEx.Direction.REVERSE);
-
+        drive.followTrajectorySequenceAsync(trajectory);
 
         while (!isStarted()) {
 
@@ -51,13 +48,10 @@ public class auto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-
-
-                    .build();
+            drive.update();
+            lift.update();
 
             if (!isStopRequested()) {
-                drive.followTrajectorySequence(trajSeq);
             }
 
 
