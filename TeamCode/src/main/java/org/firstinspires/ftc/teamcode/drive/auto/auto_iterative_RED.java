@@ -47,13 +47,13 @@ public class auto_iterative_RED extends OpMode
     @Override
     public void init_loop() {
         if (distance1.getDistance(DistanceUnit.CM)<200) {
-            teamProp = 3;
+            teamProp = 90;
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
-            teamProp = 2;
+            teamProp = 0;
         }
         else {
-            teamProp = 1;
+            teamProp = -90;
         }
         telemetry.addData("Prop Place: ", teamProp);
 
