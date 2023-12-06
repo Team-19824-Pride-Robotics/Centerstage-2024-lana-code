@@ -51,6 +51,8 @@ public class teleop extends OpMode {
     DcMotorEx winch;
 
     public static int wBack = -200;
+    public static int wPos = 0;
+    public static int wSpeed = 50;
     public static int wUp = 2000;
     public static int wDown = 1500;
     public static double wbPower = .5;
@@ -167,20 +169,16 @@ public class teleop extends OpMode {
         }
         //winch
         if (gamepad1.x){
-            winch.setTargetPosition(wBack);
-            winch.setPower(wbPower);
-            winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            wPos = winch.getCurrentPosition() + wSpeed;
+
         }
         if (gamepad1.y){
-            winch.setTargetPosition(wUp);
-            winch.setPower(wuPower);
-            winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            wPos = winch.getCurrentPosition() - wSpeed;
         }
-        if (gamepad1.a){
-            winch.setTargetPosition(wDown);
-            winch.setPower(wdPower);
-            winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
+
+              winch.setTargetPosition(wPos);
+              winch.setPower(wdPower);
+              winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //DIVER 2//
 
