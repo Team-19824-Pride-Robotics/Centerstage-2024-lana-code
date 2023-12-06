@@ -208,6 +208,12 @@ public class teleop extends OpMode {
             bPosx=.2;
         }
 
+        if(gamepad2.start) {
+            bPosx = bucket.getPosition() + 0.05;
+        }
+        if(gamepad2.share) {
+            bPosx = bucket.getPosition() - 0.05;
+        }
 
 
         if (liftControl) {
