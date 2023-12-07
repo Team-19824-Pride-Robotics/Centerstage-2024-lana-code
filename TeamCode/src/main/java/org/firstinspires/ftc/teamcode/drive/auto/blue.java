@@ -108,7 +108,7 @@ public class blue extends OpMode
             y1 = -5;
             h1 = 90;
 
-            x3 = -5;
+            x3 = 5;
             y3 = -40;
             h3 = 270;
         }
@@ -159,11 +159,17 @@ public class blue extends OpMode
                 .back(24)
                 //drive over to the backdrop with the lift facing it
                 .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
-                //use the lift, arm,and bucket to score the pixel
-                .addTemporalMarker(() -> intake.setPower(0))
+                //update the lift, arm,and bucket values to score the pixel
+                .addTemporalMarker(() -> {
+                    intake.setPower(0);
+
+
+
+                })
                 //wait for the pixel to get scored
                 .waitSeconds(5)
                 //move out of the way in case the other team needs to get there
+                .back(1)
                 .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
 
                 .build();
@@ -175,7 +181,7 @@ public class blue extends OpMode
     public void loop() {
 
           drive.update();
-//        lift.update();
+         // lift.update();
 //        intake.update();
 
         telemetry.addData("liftpos1", lift.liftpos1);

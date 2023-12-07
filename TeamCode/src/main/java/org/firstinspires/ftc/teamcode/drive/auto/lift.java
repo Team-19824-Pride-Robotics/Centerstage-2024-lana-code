@@ -51,6 +51,7 @@ public class lift {
 
     public static void update() {
 
+
         controller.setPID(p, i, d);
         int liftPos1 = lift1.getCurrentPosition();
         int liftPos2 = lift2.getCurrentPosition();

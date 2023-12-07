@@ -181,7 +181,7 @@ public class teleop extends OpMode {
               winch.setPower(wdPower);
               winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //DIVER 2//
+        //DRIVER 2//
 
 //intake
         if (gamepad2.x) {
