@@ -67,6 +67,7 @@ public class teleop extends OpMode {
     double aPos =.01;
 
     public static double bPosx = .2;
+    public static double bChange = .001;
     ServoImplEx Arm;
     ServoImplEx bucket;
     // AnalogInput sEncoder;
@@ -205,14 +206,14 @@ public class teleop extends OpMode {
         }
         if (gamepad2.left_bumper){
             liftControl = false;
-            bPosx=.2;
+            bPosx=.13;
         }
 
-        if(gamepad2.start) {
-            bPosx = bucket.getPosition() + 0.05;
+        if(gamepad2.start && bucket.getPosition()<0.99){
+            bPosx = bucket.getPosition() + bChange;
         }
-        if(gamepad2.share) {
-            bPosx = bucket.getPosition() - 0.05;
+        if(gamepad2.share && bucket.getPosition()>0.01) {
+            bPosx = bucket.getPosition() - bChange;
         }
 
 

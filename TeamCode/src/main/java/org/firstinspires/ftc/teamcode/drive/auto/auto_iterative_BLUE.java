@@ -76,6 +76,8 @@ public class auto_iterative_BLUE extends OpMode
 
                 //spit out pixel while backing up a bit
                         .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+
+
                         })
                 .waitSeconds(1)
                 .back(3)
