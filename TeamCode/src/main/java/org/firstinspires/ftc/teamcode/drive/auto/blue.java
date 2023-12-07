@@ -1,11 +1,19 @@
 package org.firstinspires.ftc.teamcode.drive.auto;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -38,9 +46,22 @@ public class blue extends OpMode
     public lift lift;
     //public intake intake;
     DcMotorEx intake;
+    DcMotorEx lift1;
+    DcMotorEx lift2;
+    ServoImplEx Arm;
+    ServoImplEx bucket;
+    // AnalogInput sEncoder;
+    AnalogInput sEncoder;
+    AnalogInput sEncoder2;
 
     public static int a = 500;
     public static int b = 100;
+
+    //pid
+    private PIDController controller;
+    public static double p = 0.005, i = 0, d =0;
+    public static double f = 0;
+    public static double target = 110;
 
     @Override
     public void init() {
@@ -52,8 +73,27 @@ public class blue extends OpMode
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
 
+//        lift1 = hardwareMap.get(DcMotorEx.class, "lift1");
+//        lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        lift1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        lift2 = hardwareMap.get(DcMotorEx.class, "lift2");
+//        lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        lift2.setDirection(DcMotorEx.Direction.REVERSE);
+
+//        Arm= (ServoImplEx) hardwareMap.get(Servo.class, "Arm");
+//        bucket = (ServoImplEx) hardwareMap.get(Servo.class, "bucket");
+//        Arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
+//        bucket.setPwmRange(new PwmControl.PwmRange(505, 2495));
+//        sEncoder = hardwareMap.get(AnalogInput.class, "sEncoder");
+//        sEncoder2 = hardwareMap.get(AnalogInput.class, "sEncoder2");
+
         distance2 = hardwareMap.get(DistanceSensor.class, "distance2");
         distance4 = hardwareMap.get(DistanceSensor.class, "distance4");
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+//pid
+       // controller = new PIDController(p,i,d);
 
         telemetry.addData("Status", "Initialized");
 
@@ -119,6 +159,11 @@ public class blue extends OpMode
                 .back(24)
                 //drive over to the backdrop with the lift facing it
                 .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
+                //use the lift, arm,and bucket to score the pixel
+                .addTemporalMarker(() -> intake.setPower(0))
+                //wait for the pixel to get scored
+                .waitSeconds(5)
+                //move out of the way in case the other team needs to get there
                 .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
 
                 .build();
