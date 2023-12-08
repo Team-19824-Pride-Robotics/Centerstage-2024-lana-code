@@ -33,6 +33,13 @@ public class intake {
         intake.setPower(power);
 
     }
+    public static void score() {
+        power = -1;
+    }
+    public static void zero() {
+
+        power = 0;
+    }
 
 
 }

@@ -64,7 +64,7 @@ public class teleop extends OpMode {
     //arm
     public static double pickup = 110;
 
-    double aPos =.01;
+    double aPos =.03;
 
     public static double bPosx = .2;
     public static double bChange = .001;
@@ -225,7 +225,7 @@ public class teleop extends OpMode {
                 target = -gamepad2.left_stick_y * liftM + target;
             }
             if (gamepad1.start) {
-                bPosx =.99;
+                bPosx =.9;
             }
             if (gamepad1.share) {
                 bPosx =.55;
@@ -242,11 +242,11 @@ public class teleop extends OpMode {
         }
 
         if (!liftControl) {
-            if (pos2 >= 72 && pos2 <=76  ){
-                aPos = .01;
+            if (pos2 >= 48 && pos2 <=52){
+                aPos = .03;
             }
-            if (pos >= 2 && pos<= 8) {
-                target = pickup;
+            if (pos >= 14 && pos<= 18) {
+                target = 110;
             }
         }
 

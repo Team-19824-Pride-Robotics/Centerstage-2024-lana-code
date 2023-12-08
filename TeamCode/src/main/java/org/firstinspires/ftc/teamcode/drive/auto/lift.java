@@ -69,10 +69,11 @@ public class lift {
         liftpos2 = lift2.getCurrentPosition();
 
     }
-    public void top(){
+    public static void score(){
+
         target = 100;
     }
-    public void zero(){
+    public static void zero(){
         target = 100;
     }
 
