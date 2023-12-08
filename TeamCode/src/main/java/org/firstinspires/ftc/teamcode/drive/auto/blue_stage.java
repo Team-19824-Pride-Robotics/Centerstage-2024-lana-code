@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous(name="blue", group="auto")
-public class blue extends OpMode
+@Autonomous(name="blue_stage ", group="auto")
+public class blue_stage extends OpMode
 {
 
     public static double x1 = -30;
@@ -29,7 +29,7 @@ public class blue extends OpMode
     public static double h1 = 0;
     public static double ht1 = -10;
     public static double x2 = -20;
-    public static double y2 = -32;
+    public static double y2 = -32.5;
     public static double h2 = -80;
     public static double ht2 = 0;
     public static double x3 = -45;
@@ -66,11 +66,13 @@ public class blue extends OpMode
 
     double aPos =.14;
 
-    public static double bPosx = .45;
+    public static double bPosx =.42 ;
 
     @Override
     public void init() {
 
+        bPosx =.42;
+        aPos = .14;
         controller = new PIDController(p,i,d);
 
          drive = new SampleMecanumDrive(hardwareMap);
@@ -114,18 +116,18 @@ public class blue extends OpMode
             x2 = -19;
         }
         else if (distance4.getDistance(DistanceUnit.CM)<200) {
-            x1 = -28;
+            x1 = -25;
             y1 = 5;
             h1 = 0;
 
-            x2 = -25;
+            x2 = -23;
         }
         else {
-            x1 = -22;
-            y1 = 10;
+            x1 = -20;
+            y1 = 9;
             h1 = -45;
 
-            x2 = -33;
+            x2 = -30;
         }
 
         telemetry.addData("distance4", distance4.getDistance(DistanceUnit.CM));
@@ -142,12 +144,9 @@ public class blue extends OpMode
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
                 .back(10)
                 .addTemporalMarker(() -> {
-                    target = 300;
+                    target = 250;
                 })
                 .waitSeconds(1)
-                .addTemporalMarker(() -> {
-                    bPosx=.5;
-                })
                 //drive to the middle of the spike marks and point the intake at the correct one
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
                 //turn the intake on for long enough to spit out the purple pixel

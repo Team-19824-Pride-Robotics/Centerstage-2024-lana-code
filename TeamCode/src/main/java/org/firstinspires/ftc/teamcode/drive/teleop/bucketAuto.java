@@ -4,12 +4,9 @@ package org.firstinspires.ftc.teamcode.drive.teleop;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -17,7 +14,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Config
 @TeleOp (group = "teleop")
-public class liftReset extends OpMode {
+public class bucketAuto extends OpMode {
     ServoImplEx servo;
     ServoImplEx servo2;
 
@@ -25,8 +22,7 @@ public class liftReset extends OpMode {
    AnalogInput sEncoder;
     AnalogInput sEncoder2;
 
-    public static double bucket = .08;
-    public static  double arm = .09;
+    public static double bucket = .42;
 
 
     @Override
@@ -53,7 +49,6 @@ public class liftReset extends OpMode {
 
 
             servo2.setPosition(bucket);
-            servo.setPosition(arm);
 
 
 

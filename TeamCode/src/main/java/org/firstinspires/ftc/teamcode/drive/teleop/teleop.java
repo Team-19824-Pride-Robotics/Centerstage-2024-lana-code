@@ -62,7 +62,6 @@ public class teleop extends OpMode {
 
 
     //arm
-    public static double pickup = 110;
 
     double aPos =.03;
 
@@ -83,6 +82,10 @@ public class teleop extends OpMode {
 
     @Override
     public void init() {
+        target = 110;
+        aPos =.03;
+       bPosx = .2;
+
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //pid
@@ -202,7 +205,7 @@ public class teleop extends OpMode {
         if (gamepad2.right_bumper){
             liftControl = true;
             target=300;
-            bPosx=.55;
+            bPosx=.45;
         }
         if (gamepad2.left_bumper){
             liftControl = false;
