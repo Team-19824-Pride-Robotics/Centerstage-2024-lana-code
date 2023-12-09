@@ -67,6 +67,7 @@ public class blue_stage extends OpMode
     double aPos =.14;
 
     public static double bPosx =.42 ;
+    public static double score = 500;
 
     @Override
     public void init() {
@@ -116,14 +117,14 @@ public class blue_stage extends OpMode
             x2 = -19;
         }
         else if (distance4.getDistance(DistanceUnit.CM)<200) {
-            x1 = -25;
+            x1 = -25.5;
             y1 = 5;
             h1 = 0;
 
             x2 = -23;
         }
         else {
-            x1 = -20;
+            x1 = -22;
             y1 = 9;
             h1 = -45;
 
@@ -160,7 +161,7 @@ public class blue_stage extends OpMode
                 .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
                 //update the lift, arm,and bucket values to score the pixel
                 .addTemporalMarker(() -> {
-                        target = 800;
+                        target = score;
                 })
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {

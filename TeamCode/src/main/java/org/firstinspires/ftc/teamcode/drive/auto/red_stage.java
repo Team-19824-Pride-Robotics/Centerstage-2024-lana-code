@@ -29,8 +29,8 @@ public class red_stage extends OpMode
     public static double h1 = 0;
     public static double ht1 = -10;
     public static double x2 = -20;
-    public static double y2 = 34.5;
-    public static double h2 = 86;
+    public static double y2 = 34;
+    public static double h2 = 85;
     public static double ht2 = 0;
     public static double x3 = -45;
     public static double y3 = 33;
@@ -67,6 +67,8 @@ public class red_stage extends OpMode
     double aPos =.14;
 
     public static double bPosx =.42 ;
+
+    public static double score = 500;
 
     @Override
     public void init() {
@@ -113,10 +115,10 @@ public class red_stage extends OpMode
             y1 = 8;
             h1 = 0;
 
-            x2 = -19;
+            x2 = -16;
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
-            x1 = -25;
+            x1 = -25.5;
             y1 = -5;
             h1 = 0;
 
@@ -160,7 +162,7 @@ public class red_stage extends OpMode
                 .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
                 //update the lift, arm,and bucket values to score the pixel
                 .addTemporalMarker(() -> {
-                        target = 800;
+                        target = score;
                 })
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {

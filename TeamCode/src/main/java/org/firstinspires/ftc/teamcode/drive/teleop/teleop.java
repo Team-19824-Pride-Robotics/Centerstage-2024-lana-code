@@ -44,7 +44,7 @@ public class teleop extends OpMode {
     DcMotorEx lift2;
 
 
-    public static double liftM = 10;
+    public static double liftM = 40;
     public static double liftMax = 2000;
 
     //winch
@@ -212,12 +212,7 @@ public class teleop extends OpMode {
             bPosx=.13;
         }
 
-        if(gamepad2.start && bucket.getPosition()<0.99){
-            bPosx = bucket.getPosition() + bChange;
-        }
-        if(gamepad2.share && bucket.getPosition()>0.01) {
-            bPosx = bucket.getPosition() - bChange;
-        }
+
 
 
         if (liftControl) {
@@ -241,6 +236,12 @@ public class teleop extends OpMode {
             }
             if (gamepad2.dpad_up) {
                 target =2400;
+            }
+            if(gamepad2.start && bucket.getPosition()<0.99){
+                bPosx = bucket.getPosition() + bChange;
+            }
+            if(gamepad2.share && bucket.getPosition()>0.01) {
+                bPosx = bucket.getPosition() - bChange;
             }
         }
 

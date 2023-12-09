@@ -48,7 +48,7 @@ public class bucketAuto extends OpMode {
 
 
 
-            servo2.setPosition(bucket);
+            servo2.setPosition(.42);
 
 
 
