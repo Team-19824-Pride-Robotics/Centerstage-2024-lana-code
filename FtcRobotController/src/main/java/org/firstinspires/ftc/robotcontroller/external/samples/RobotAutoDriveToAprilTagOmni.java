@@ -60,7 +60,7 @@ import java.util.concurrent.TimeUnit;
  * driving towards the tag to achieve the desired distance.
  * To reduce any motion blur (which will interrupt the detection process) the Camera exposure is reduced to a very low value (5mS)
  * You can determine the best Exposure and Gain values by using the ConceptAprilTagOptimizeExposure OpMode in this Samples folder.
- *
+ *]\
  * The code assumes a Robot Configuration with motors named: leftfront_drive and rightfront_drive, leftback_drive and rightback_drive.
  * The motor directions must be set so a positive power goes forward on all wheels.
  * This sample assumes that the current game AprilTag Library (usually for the current season) is being loaded by default,
@@ -113,6 +113,8 @@ public class RobotAutoDriveToAprilTagOmni extends LinearOpMode
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
+
+
 
     @Override public void runOpMode()
     {
