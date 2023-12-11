@@ -44,7 +44,7 @@ public class teleop extends OpMode {
     DcMotorEx lift2;
 
 
-    public static double liftM = 10;
+    public static double liftM = 40;
     public static double liftMax = 2000;
 
     //winch
@@ -62,11 +62,11 @@ public class teleop extends OpMode {
 
 
     //arm
-    public static double pickup = 110;
 
-    double aPos =.01;
+    double aPos =.03;
 
     public static double bPosx = .2;
+    public static double bChange = .001;
     ServoImplEx Arm;
     ServoImplEx bucket;
     // AnalogInput sEncoder;
@@ -82,6 +82,10 @@ public class teleop extends OpMode {
 
     @Override
     public void init() {
+        target = 110;
+        aPos =.03;
+       bPosx = .2;
+
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //pid
@@ -180,7 +184,7 @@ public class teleop extends OpMode {
               winch.setPower(wdPower);
               winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //DIVER 2//
+        //DRIVER 2//
 
 //intake
         if (gamepad2.x) {
@@ -201,12 +205,13 @@ public class teleop extends OpMode {
         if (gamepad2.right_bumper){
             liftControl = true;
             target=300;
-            bPosx=.55;
+            bPosx=.45;
         }
         if (gamepad2.left_bumper){
             liftControl = false;
-            bPosx=.2;
+            bPosx=.13;
         }
+
 
 
 
@@ -218,7 +223,7 @@ public class teleop extends OpMode {
                 target = -gamepad2.left_stick_y * liftM + target;
             }
             if (gamepad1.start) {
-                bPosx =.99;
+                bPosx =.9;
             }
             if (gamepad1.share) {
                 bPosx =.55;
@@ -232,14 +237,20 @@ public class teleop extends OpMode {
             if (gamepad2.dpad_up) {
                 target =2400;
             }
+            if(gamepad2.start && bucket.getPosition()<0.99){
+                bPosx = bucket.getPosition() + bChange;
+            }
+            if(gamepad2.share && bucket.getPosition()>0.01) {
+                bPosx = bucket.getPosition() - bChange;
+            }
         }
 
         if (!liftControl) {
-            if (pos2 >= 72 && pos2 <=76  ){
-                aPos = .01;
+            if (pos2 >= 48 && pos2 <=52){
+                aPos = .03;
             }
-            if (pos >= 2 && pos<= 8) {
-                target = pickup;
+            if (pos >= 14 && pos<= 18) {
+                target = 110;
             }
         }
 
