@@ -55,7 +55,7 @@ public class teleop_with_AprilTag_Linear extends LinearOpMode {
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
 
     //Our Stuff
-    private PIDController controller;
+    public PIDController controller;
     public static double p = 0.005, i = 0, d = 0;
     public static double f = 0;
     public static double target = 110;
@@ -358,15 +358,19 @@ public class teleop_with_AprilTag_Linear extends LinearOpMode {
                 }
             }
 
-            controller.setPID(p, i, d);
+           // controller.setPID(p, i, d);
             int liftPos1 = lift1.getCurrentPosition();
             int liftPos2 = lift2.getCurrentPosition();
-            double pid = controller.calculate(liftPos1, target);
-            double pid2 = controller.calculate(liftPos2, target);
+            //double pid = controller.calculate(liftPos1, target);
+           // double pid2 = controller.calculate(liftPos2, target);
             double ff = 0;
 
-            double lPower1 = pid + ff;
-            double lPower2 = pid2 + ff;
+           // double lPower1 = pid + ff;
+           // double lPower2 = pid2 + ff;
+
+            //TEMPORARY FOR TESTING - USE PID IN ACTUAL
+            double lPower1 = .5;
+            double lPower2 = .5;
 
             lift1.setPower(lPower1);
             lift2.setPower(lPower2);
