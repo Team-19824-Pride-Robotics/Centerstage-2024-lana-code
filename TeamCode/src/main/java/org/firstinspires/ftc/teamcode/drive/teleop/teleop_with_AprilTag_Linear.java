@@ -30,7 +30,7 @@ public class teleop_with_AprilTag_Linear extends LinearOpMode {
 
     //AprilTag Stuff
 
-    final double DESIRED_DISTANCE = 8.0; //  this is how close the camera should get to the target (inches)
+     double DESIRED_DISTANCE = 6.0; //  this is how close the camera should get to the target (inches)
 
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
@@ -125,6 +125,11 @@ public class teleop_with_AprilTag_Linear extends LinearOpMode {
         BR = hardwareMap.get(DcMotorEx.class, "BL");
         BR.setDirection(DcMotorEx.Direction.REVERSE);
         FR.setDirection(DcMotorEx.Direction.REVERSE);
+
+        FR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
         lift1 = hardwareMap.get(DcMotorEx.class, "lift1");
         lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -286,6 +291,14 @@ public class teleop_with_AprilTag_Linear extends LinearOpMode {
                 wPos = winch.getCurrentPosition() - wSpeed;
             }
 
+          //  if (gamepad1.start) {
+          //      DESIRED_DISTANCE += 0.5;
+           // }
+
+           // if (gamepad1.back) {
+           //     DESIRED_DISTANCE -= 0.5;
+            //}
+
             winch.setTargetPosition(wPos);
             winch.setPower(wdPower);
             winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -358,19 +371,19 @@ public class teleop_with_AprilTag_Linear extends LinearOpMode {
                 }
             }
 
-           // controller.setPID(p, i, d);
+            controller.setPID(p, i, d);
             int liftPos1 = lift1.getCurrentPosition();
             int liftPos2 = lift2.getCurrentPosition();
-            //double pid = controller.calculate(liftPos1, target);
-           // double pid2 = controller.calculate(liftPos2, target);
+            double pid = controller.calculate(liftPos1, target);
+            double pid2 = controller.calculate(liftPos2, target);
             double ff = 0;
 
-           // double lPower1 = pid + ff;
-           // double lPower2 = pid2 + ff;
+            double lPower1 = pid + ff;
+            double lPower2 = pid2 + ff;
 
             //TEMPORARY FOR TESTING - USE PID IN ACTUAL
-            double lPower1 = .5;
-            double lPower2 = .5;
+            //double lPower1 = .2;
+            //double lPower2 = .2;
 
             lift1.setPower(lPower1);
             lift2.setPower(lPower2);
