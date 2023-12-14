@@ -29,7 +29,7 @@ public class red_stage extends OpMode
     public static double h1 = 0;
     public static double ht1 = -10;
     public static double x2 = -20;
-    public static double y2 = 34;
+    public static double y2 = 30;
     public static double h2 = 85;
     public static double ht2 = 0;
     public static double x3 = -45;
@@ -59,7 +59,7 @@ public class red_stage extends OpMode
     private PIDController controller;
     public static double p = 0.005, i = 0, d =0;
     public static double f = 0;
-    public static double target = 110;
+    public static double target = 0;
 
     double liftpos1;
     double liftpos2;
@@ -72,6 +72,7 @@ public class red_stage extends OpMode
 
     @Override
     public void init() {
+        target = 0;
 
         bPosx =.42;
         aPos = .14;
@@ -112,24 +113,24 @@ public class red_stage extends OpMode
 
         if (distance1.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = 8;
+            y1 = 9;
             h1 = 0;
 
-            x2 = -16;
+            x2 = -18;
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
             x1 = -25.5;
             y1 = -5;
             h1 = 0;
 
-            x2 = -23;
+            x2 = -26;
         }
         else {
-            x1 = -20;
-            y1 = -9;
+            x1 = -20.5;
+            y1 = -9.5;
             h1 = 45;
 
-            x2 = -30;
+            x2 = -33;
         }
 
         telemetry.addData("distance3", distance3.getDistance(DistanceUnit.CM));
@@ -153,7 +154,7 @@ public class red_stage extends OpMode
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
                 //turn the intake on for long enough to spit out the purple pixel
                 .addTemporalMarker(() -> intake.setPower(0.75))
-                .waitSeconds(0.5)
+                .waitSeconds(.5)
                 .addTemporalMarker(() -> intake.setPower(0))
                 //back up a bit to make sure you don't hit the pixel
                 .forward(2)
@@ -169,11 +170,13 @@ public class red_stage extends OpMode
                     aPos = .99;
                 })
                 .waitSeconds(2)
+                .forward(4)
                 .addTemporalMarker(() -> {
-                    bPosx = .9;
+                    bPosx = .88;
                 })
                 //wait for the pixel to get scored
                 .waitSeconds(2)
+                .back(5)
                 .addTemporalMarker(() -> {
                     bPosx = .09;
                 })
@@ -184,9 +187,7 @@ public class red_stage extends OpMode
                 .addTemporalMarker(() -> {
                     target = 0;
                 })
-                .waitSeconds(1)
                 //move out of the way in case the other team needs to get there
-                .back(1)
                 .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
 
 

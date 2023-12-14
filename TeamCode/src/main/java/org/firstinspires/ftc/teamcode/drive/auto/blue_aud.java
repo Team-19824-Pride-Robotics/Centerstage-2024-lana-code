@@ -95,8 +95,8 @@ public class blue_aud extends OpMode
                 //drive to the middle of the spike marks and point the intake at the correct one
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(0.75))
-                .waitSeconds(0.5)
+                .addTemporalMarker(() -> intake.setPower(1))
+                .waitSeconds(.5)
                 .addTemporalMarker(() -> intake.setPower(0))
                 //back up a bit to make sure you don't hit the pixel
                 .forward(5)

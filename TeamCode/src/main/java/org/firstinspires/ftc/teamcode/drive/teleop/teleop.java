@@ -24,7 +24,7 @@ public class teleop extends OpMode {
     private PIDController controller;
     public static double p = 0.005, i = 0, d =0;
     public static double f = 0;
-    public static double target = 110;
+    public static double target = 120;
 
     boolean liftControl = false;
 
@@ -52,7 +52,7 @@ public class teleop extends OpMode {
 
     public static int wBack = -200;
     public static int wPos = 0;
-    public static int wSpeed = 50;
+    public static int wSpeed = 200;
     public static int wUp = 2000;
     public static int wDown = 1500;
     public static double wbPower = .5;
@@ -63,9 +63,9 @@ public class teleop extends OpMode {
 
     //arm
 
-    double aPos =.03;
+    double aPos =.08;
 
-    public static double bPosx = .2;
+    public static double bPosx = .13;
     public static double bChange = .001;
     ServoImplEx Arm;
     ServoImplEx bucket;
@@ -83,8 +83,9 @@ public class teleop extends OpMode {
     @Override
     public void init() {
         target = 110;
-        aPos =.03;
-       bPosx = .2;
+        aPos =.08;
+       bPosx = .13;
+       wPos = 0;
 
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -120,7 +121,8 @@ public class teleop extends OpMode {
         drone = hardwareMap.get(Servo.class, "drone");
 
         winch = hardwareMap.get(DcMotorEx.class, "winch");
-
+        winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
     }
@@ -172,8 +174,12 @@ public class teleop extends OpMode {
             drone.setPosition(launch);
         }
         //winch
-        if (gamepad1.x){
+        if (gamepad1.a){
             wPos = winch.getCurrentPosition() + wSpeed;
+
+        }
+        if (gamepad1.x){
+            wPos = winch.getCurrentPosition() + 50;
 
         }
         if (gamepad1.y){
@@ -247,10 +253,11 @@ public class teleop extends OpMode {
 
         if (!liftControl) {
             if (pos2 >= 48 && pos2 <=52){
-                aPos = .03;
+                aPos = .08;
             }
-            if (pos >= 14 && pos<= 18) {
-                target = 110;
+            if (pos >= 32 && pos<= 36
+            ) {
+                target = 120;
             }
         }
 

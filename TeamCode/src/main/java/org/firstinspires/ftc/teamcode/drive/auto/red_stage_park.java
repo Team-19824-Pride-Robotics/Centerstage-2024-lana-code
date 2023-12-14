@@ -20,41 +20,40 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous(name="red_aud", group="auto")
-public class red_aud extends OpMode
+@Autonomous(name="red_stage_park", group="auto")
+public class red_stage_park extends OpMode
 {
 
     public static double x1 = -30;
     public static double y1 = 5;
     public static double h1 = 0;
+    public static double ht1 = -10;
+    public static double x2 = -20;
+    public static double y2 = 34;
+    public static double h2 = 85;
+    public static double ht2 = 0;
+    public static double x3 = -45;
+    public static double y3 = 33;
+    public static double h3 = 86;
+    public static double ht3 = -10;
 
 
-
-    DistanceSensor distance2;
-    DistanceSensor distance4;
+    DistanceSensor distance1;
+    DistanceSensor distance3;
 
     public SampleMecanumDrive drive;
 
     DcMotorEx intake;
 
 
-
-
-
-
-
-
     @Override
     public void init() {
-
-
-         drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
 
-
-        distance2 = hardwareMap.get(DistanceSensor.class, "distance2");
-        distance4 = hardwareMap.get(DistanceSensor.class, "distance4");
+        distance1 = hardwareMap.get(DistanceSensor.class, "distance1");
+        distance3 = hardwareMap.get(DistanceSensor.class, "distance3");
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -66,27 +65,30 @@ public class red_aud extends OpMode
     @Override
     public void init_loop() {
 
-        if (distance2.getDistance(DistanceUnit.CM)<200) {
+        if (distance1.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = -10;
+            y1 = 9;
             h1 = 0;
 
+            x2 = -16;
         }
-        else if (distance4.getDistance(DistanceUnit.CM)<200) {
+        else if (distance3.getDistance(DistanceUnit.CM)<200) {
             x1 = -25.5;
-            y1 = 5;
+            y1 = -5;
             h1 = 0;
 
+            x2 = -23;
         }
         else {
-            x1 = -20;
-            y1 = 8;
-            h1 = -45;
+            x1 = -20.5;
+            y1 = -9.5;
+            h1 = 45;
 
+            x2 = -31;
         }
 
-        telemetry.addData("distance4", distance4.getDistance(DistanceUnit.CM));
-        telemetry.addData("distance2", distance2.getDistance(DistanceUnit.CM));
+        telemetry.addData("distance3", distance3.getDistance(DistanceUnit.CM));
+        telemetry.addData("distance1", distance1.getDistance(DistanceUnit.CM));
         telemetry.update();
     }
 
@@ -104,8 +106,14 @@ public class red_aud extends OpMode
                 .addTemporalMarker(() -> intake.setPower(0.75))
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> intake.setPower(0))
+                .waitSeconds(.5)
                 //back up a bit to make sure you don't hit the pixel
                 .forward(5)
+                //strafe back towards the wall and then forward some to go around the scored pixel
+                //drive over to the backdrop with the lift facing it
+                .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
+
+
                 .build();
 
         drive.followTrajectorySequenceAsync(trajSeq);
@@ -115,7 +123,6 @@ public class red_aud extends OpMode
     public void loop() {
 
           drive.update();
-
 
         telemetry.update();
     }
