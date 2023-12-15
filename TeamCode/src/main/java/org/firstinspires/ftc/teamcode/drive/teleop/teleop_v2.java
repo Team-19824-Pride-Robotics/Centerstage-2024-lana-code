@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.drive.teleop;
 
-
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -28,7 +26,6 @@ public class teleop_v2 extends LinearOpMode {
 
     boolean liftControl = false;
 
-
     DcMotorEx FR;
     DcMotorEx FL;
     DcMotorEx BR;
@@ -42,7 +39,6 @@ public class teleop_v2 extends LinearOpMode {
     //lift
     DcMotorEx lift1;
     DcMotorEx lift2;
-
 
     public static double liftM = 40;
     public static double liftMax = 2000;
@@ -59,37 +55,39 @@ public class teleop_v2 extends LinearOpMode {
     public static double wuPower = 1;
     public static double wdPower = 1;
 
-
     //arm
-
     double aPos = .03;
-
     public static double bPosx = .2;
     public static double bChange = .001;
     ServoImplEx Arm;
     ServoImplEx bucket;
-    Servo pincer_left;
-    Servo pincer_right;
-
+    Servo outtake_lid;
     // AnalogInput sEncoder;
     AnalogInput sEncoder;
     AnalogInput sEncoder2;
 
+    //pincer
+    Servo pincer_left;
+    Servo pincer_right;
+
     //drone
     Servo drone;
+
     public static double launch = .3;
     public static double right_open = 0.3;
     public static double right_closed = 0.1;
     public static double left_open = 0.69;
     public static double left_closed = 0.89;
+    public static double out_shut = 0;
+    public static double out_half = .5;
+    public static double out_open = 1;
 
 
     public void runOpMode() {
         target = 110;
         aPos = .03;
         bPosx = .2;
-
-
+        
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //pid
         controller = new PIDController(p, i, d);
@@ -118,12 +116,9 @@ public class teleop_v2 extends LinearOpMode {
         sEncoder2 = hardwareMap.get(AnalogInput.class, "sEncoder2");
         pincer_left = hardwareMap.get(Servo.class, "pincer_left");
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
-
-
+        outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
-
         drone = hardwareMap.get(Servo.class, "drone");
-
         winch = hardwareMap.get(DcMotorEx.class, "winch");
 
         waitForStart();
@@ -182,6 +177,17 @@ public class teleop_v2 extends LinearOpMode {
             winch.setTargetPosition(wPos);
             winch.setPower(wdPower);
             winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            //bucket lid to release pixels
+            if (gamepad1.back) {
+                outtake_lid.setPosition(out_shut);
+            }
+            if (gamepad1.start) {
+                outtake_lid.setPosition(out_half);
+            }
+            if (gamepad1.a) {
+                outtake_lid.setPosition(out_open);
+            }
 
             //DRIVER 2//
 

@@ -126,7 +126,6 @@ public class teleop extends OpMode {
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
         outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
 
-
         intake = hardwareMap.get(DcMotorEx.class, "intake");
 
         drone = hardwareMap.get(Servo.class, "drone");
