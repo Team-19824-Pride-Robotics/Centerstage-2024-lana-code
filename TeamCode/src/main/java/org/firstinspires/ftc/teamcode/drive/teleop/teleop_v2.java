@@ -7,7 +7,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,8 +17,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
 @Config
-@TeleOp(name = "teleop", group = "teleop")
-public class teleop extends OpMode {
+@TeleOp(name = "teleop_v2", group = "teleop")
+public class teleop_v2 extends LinearOpMode {
 
     //pid
     private PIDController controller;
@@ -85,8 +84,7 @@ public class teleop extends OpMode {
     public static double left_closed = 0.89;
 
 
-    @Override
-    public void init() {
+    public void runOpMode() {
         target = 110;
         aPos = .03;
         bPosx = .2;
@@ -127,10 +125,10 @@ public class teleop extends OpMode {
         drone = hardwareMap.get(Servo.class, "drone");
 
         winch = hardwareMap.get(DcMotorEx.class, "winch");
-    }
 
-    @Override
-    public void loop() {
+        waitForStart();
+
+        while (opModeIsActive()) {
 
             target = Range.clip(target, 110, 2400);
 
@@ -291,3 +289,4 @@ public class teleop extends OpMode {
         }
 
     }
+}
