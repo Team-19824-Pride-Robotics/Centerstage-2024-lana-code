@@ -71,6 +71,7 @@ public class teleop extends OpMode {
     ServoImplEx bucket;
     Servo pincer_left;
     Servo pincer_right;
+    Servo outtake_lid;
 
     // AnalogInput sEncoder;
     AnalogInput sEncoder;
@@ -83,6 +84,9 @@ public class teleop extends OpMode {
     public static double right_closed = 0.1;
     public static double left_open = 0.69;
     public static double left_closed = 0.89;
+    public static double out_shut = 0;
+    public static double out_half = .5;
+    public static double out_open = 1;
 
 
     @Override
@@ -120,6 +124,7 @@ public class teleop extends OpMode {
         sEncoder2 = hardwareMap.get(AnalogInput.class, "sEncoder2");
         pincer_left = hardwareMap.get(Servo.class, "pincer_left");
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
+        outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
 
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
@@ -179,6 +184,15 @@ public class teleop extends OpMode {
             }
             if (gamepad1.y) {
                 wPos = winch.getCurrentPosition() - wSpeed;
+            }
+            if (gamepad1.back) {
+                outtake_lid.setPosition(out_shut);
+            }
+            if (gamepad1.start) {
+                outtake_lid.setPosition(out_half);
+            }
+            if (gamepad1.a) {
+                outtake_lid.setPosition(out_open);
             }
 
             winch.setTargetPosition(wPos);

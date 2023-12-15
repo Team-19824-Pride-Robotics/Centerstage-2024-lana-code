@@ -161,7 +161,7 @@ public class teleop_with_AprilTag extends LinearOpMode {
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch Play to start OpMode");
         telemetry.update();
-
+waitForStart();
 
     while (opModeIsActive()) {
         targetFound = false;
