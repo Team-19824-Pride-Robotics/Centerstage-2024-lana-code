@@ -141,6 +141,8 @@ public class teleop_v2 extends LinearOpMode {
         double  drive;
         double  strafe;
         double  turn;
+        double dPad_strafe = 1;
+        double dPad_drive = 1;
         double drive_speed = 1;
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -223,16 +225,31 @@ public class teleop_v2 extends LinearOpMode {
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
             } else {
 
-                // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
+                // drive using manual mode, use right bumper for slow mode
                 if(gamepad1.right_bumper) {
                     drive_speed = drive_slow;
                 }
                 else {
                     drive_speed = 1;
                 }
+                if (gamepad1.dpad_right) {
+                    dPad_strafe = 1;
+                }
+                if (gamepad1.dpad_left) {
+                    dPad_strafe = -1;
+                }
+                if (gamepad1.dpad_up) {
+                    dPad_drive = 1;
+                }
+                if (gamepad1.dpad_down) {
+                    dPad_drive = -1;
+                }
+                if(gamepad1.left_stick_y > 0.2 || gamepad1.left_stick_y < -0.2) {
+                    dPad_drive = -gamepad1.left_stick_y;
+                }
 
-                drive  = -gamepad1.left_stick_y * drive_speed;
-                strafe = -gamepad1.left_stick_x * drive_speed;
+                drive  = dPad_drive * drive_speed;
+                strafe = dPad_strafe * drive_speed;
                 turn   = -gamepad1.right_stick_x * drive_speed;
 
             }
