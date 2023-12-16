@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.ArrayList;
+
 @Config
 @TeleOp(name = "teleop_v2", group = "teleop")
 public class teleop_v2 extends LinearOpMode {
@@ -25,6 +27,9 @@ public class teleop_v2 extends LinearOpMode {
     public static double target = 110;
 
     boolean liftControl = false;
+    ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
+    int booleanIncrementer = 0;
+    public static double pince_time = 0.2;
 
     DcMotorEx FR;
     DcMotorEx FL;
@@ -56,9 +61,13 @@ public class teleop_v2 extends LinearOpMode {
     public static double wdPower = 1;
 
     //arm
-    double aPos = .03;
+    public static double aPos = .03;
     public static double bPosx = .2;
     public static double bChange = .001;
+    public static double drive_slow = 0.5;
+
+
+
     ServoImplEx Arm;
     ServoImplEx bucket;
     Servo outtake_lid;
@@ -81,12 +90,24 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_shut = 0;
     public static double out_half = .5;
     public static double out_open = 1;
+    public static double bucket_score = 0.55;
+    public static double bucket_intake = 0.13;
+    public static double arm_intake = 0.13;
+    public static double arm_score = 0.89;
+    public static double lift_intake = 110;
+    public static double lift_low = 110;
+
 
 
     public void runOpMode() {
         target = 110;
-        aPos = .03;
-        bPosx = .2;
+        aPos = arm_intake;
+        bPosx = bucket_intake;
+
+        double  drive;
+        double  strafe;
+        double  turn;
+        double drive_speed = 1;
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 //pid
@@ -125,7 +146,9 @@ public class teleop_v2 extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            target = Range.clip(target, 110, 2400);
+//two driving methods --> dPad strafes or left stick strafes
+
+      /*      //dPad strafes method
 
             double d_power = .8 - .4 * gamepad1.left_trigger + (.5 * gamepad1.right_trigger);
             double drive = gamepad1.left_stick_y;
@@ -161,10 +184,27 @@ public class teleop_v2 extends LinearOpMode {
                 FR.setPower(d_power);
             }
 
+       */
+
+           //left stick strafes method
+            if(gamepad1.right_bumper) {
+                drive_speed = drive_slow;
+            }
+            else {
+                drive_speed = 1;
+            }
+
+            drive  = -gamepad1.left_stick_y * drive_speed;
+            strafe = -gamepad1.left_stick_x * drive_speed;
+            turn   = -gamepad1.right_stick_x * drive_speed;
+
+            moveRobot(drive, strafe, turn);
+
             //drone
             if (gamepad1.b) {
                 drone.setPosition(launch);
             }
+
             //winch
             if (gamepad1.x) {
                 wPos = winch.getCurrentPosition() + wSpeed;
@@ -179,13 +219,13 @@ public class teleop_v2 extends LinearOpMode {
             winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             //bucket lid to release pixels
-            if (gamepad1.back) {
+            if (gamepad1.start) {
                 outtake_lid.setPosition(out_shut);
             }
-            if (gamepad1.start) {
+            if (gamepad1.touchpad) {
                 outtake_lid.setPosition(out_half);
             }
-            if (gamepad1.a) {
+            if (gamepad1.back) {
                 outtake_lid.setPosition(out_open);
             }
 
@@ -201,6 +241,11 @@ public class teleop_v2 extends LinearOpMode {
             if (gamepad2.a) {
                 intake.setPower(0);
             }
+
+//pincers: three options --> two buttons, toggle, one button
+
+/*//two buttons method
+
             if (gamepad2.right_trigger > 0.2) {
                 pincer_right.setPosition(right_closed);
                 pincer_left.setPosition(left_closed);
@@ -209,62 +254,102 @@ public class teleop_v2 extends LinearOpMode {
                 pincer_right.setPosition(right_open);
                 pincer_left.setPosition(left_open);
             }
+*/
+
+/*//toggle method
+            boolean G2YPressed = ifPressed(gamepad2.y);
+            double pincerPos = pincer_left.getPosition();
+
+            if (G2YPressed && pincerPos == left_open) {
+                pincer_left.setPosition(left_closed);
+                pincer_right.setPosition(right_closed);
+            }
+            else if (G2YPressed && pincerPos == left_closed) {
+                pincer_left.setPosition(left_open);
+                pincer_right.setPosition(right_open);
+            }
+ */
+
+//one button method
+            pincer_left.setPosition(left_open);
+            pincer_right.setPosition(right_open);
+
+            if (gamepad2.y) {
+                resetRuntime();
+                while (getRuntime() < pince_time) {
+                    pincer_left.setPosition(left_closed);
+                    pincer_right.setPosition(right_closed);
+                }
+            }
+
+
+
 
             double pos = sEncoder.getVoltage() / 3.3 * 360;
             double pos2 = sEncoder2.getVoltage() / 3.3 * 360;
 
-            aPos = Range.clip(aPos, .01, .99);
-
+//right bumper moves the lift up a bit and moves the bucket to scoring position
+//left bumper sends everything to intake positions
             if (gamepad2.right_bumper) {
                 liftControl = true;
                 target = 300;
-                bPosx = .45;
+                bPosx = bucket_score;
             }
             if (gamepad2.left_bumper) {
                 liftControl = false;
-                bPosx = .13;
             }
 
 
             if (liftControl) {
-                if (gamepad2.y) {
-                    aPos = .99;
+
+                //manual lift controls
+                if (gamepad2.left_stick_y < -0.2 || gamepad2.left_stick_y > 0.2) {
+                    target += -gamepad2.left_stick_y * liftM;
                 }
-                if (gamepad2.left_stick_y < .2 || gamepad2.left_stick_y > .2) {
-                    target = -gamepad2.left_stick_y * liftM + target;
-                }
-                if (gamepad1.start) {
-                    bPosx = .9;
-                }
-                if (gamepad1.share) {
-                    bPosx = .55;
-                }
+
+                //dpad buttons send the lift up to the right height
+                //hold down the button or press again to send arm to scoring position
                 if (gamepad2.dpad_down) {
                     target = 1100;
+                    if (lift1.getCurrentPosition() > 400) {
+                        aPos = arm_score;
+                    }
                 }
                 if (gamepad2.dpad_left) {
                     target = 2000;
+                    if (lift1.getCurrentPosition() > 400) {
+                        aPos = arm_score;
+                    }
                 }
                 if (gamepad2.dpad_up) {
                     target = 2400;
+                    if (lift1.getCurrentPosition() > 400) {
+                        aPos = arm_score;
+                    }
                 }
+
+                //manual bucket controls
                 if (gamepad2.start && bucket.getPosition() < 0.99) {
-                    bPosx = bucket.getPosition() + bChange;
+                    bPosx += bChange;
                 }
                 if (gamepad2.share && bucket.getPosition() > 0.01) {
-                    bPosx = bucket.getPosition() - bChange;
+                    bPosx -= bChange;
                 }
             }
 
             if (!liftControl) {
-                if (pos2 >= 48 && pos2 <= 52) {
-                    aPos = .03;
-                }
-                if (pos >= 14 && pos <= 18) {
-                    target = 110;
+                //send the arm and bucket back to intake positions
+                aPos = arm_intake;
+                bPosx = bucket_intake;
+                //once the arm is actually back, send the lift to intake position
+                if (Arm.getPosition() < 0.2) {
+                    target = lift_intake;
                 }
             }
 
+
+//send the lift to the current value of the target variable
+            target = Range.clip(target, 110, 2400);
             controller.setPID(p, i, d);
             int liftPos1 = lift1.getCurrentPosition();
             int liftPos2 = lift2.getCurrentPosition();
@@ -277,22 +362,73 @@ public class teleop_v2 extends LinearOpMode {
 
             lift1.setPower(lPower1);
             lift2.setPower(lPower2);
+
+//send the arm to the current value of the aPos variable
+            aPos = Range.clip(aPos, .01, .99);
             Arm.setPosition(aPos);
+
+//send the bucket to the current value of the bPosx variable
+            bPosx = Range.clip(bPosx, .01, .99);
             bucket.setPosition(bPosx);
+
+//reset the boolean incrementer for your toggle trick
+            booleanIncrementer = 0;
 
             telemetry.addData("target", target);
             telemetry.addData("Run time", getRuntime());
-            telemetry.addData("1", "test");
             telemetry.addData("pos1", lift1.getCurrentPosition());
             telemetry.addData("power1", lift1.getPower());
             telemetry.addData("pos2", lift2.getCurrentPosition());
             telemetry.addData("power2", lift2.getPower());
             telemetry.addData("arm", pos);
+            telemetry.addData("arm position", aPos);
             telemetry.addData("bucket", pos2);
+            telemetry.addData("bucket position", bPosx);
             telemetry.addData("pincer_left", pincer_left.getPosition());
             telemetry.addData("pincer_right", pincer_right.getPosition());
             telemetry.update();
         }
 
+    }
+
+    private boolean ifPressed(boolean button) {
+        boolean output = false;
+        if (booleanArray.size() == booleanIncrementer) {
+            booleanArray.add(false);
+        }
+        boolean buttonWas = booleanArray.get(booleanIncrementer);
+        if (button != buttonWas && button) {
+            output = true;
+        }
+        booleanArray.set(booleanIncrementer, button);
+
+        booleanIncrementer += 1;
+        return output;
+    }
+
+    public void moveRobot(double x, double y, double yaw) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x - y - yaw;
+        double rightFrontPower   =  x + y + yaw;
+        double leftBackPower     =  x + y - yaw;
+        double rightBackPower    =  x - y + yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        FL.setPower(leftFrontPower);
+        FR.setPower(rightFrontPower);
+        BL.setPower(leftBackPower);
+        BR.setPower(rightBackPower);
     }
 }
