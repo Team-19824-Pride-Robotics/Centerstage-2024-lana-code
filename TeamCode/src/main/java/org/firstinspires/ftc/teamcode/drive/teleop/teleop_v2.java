@@ -30,36 +30,11 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name = "teleop_v2", group = "teleop")
 public class teleop_v2 extends LinearOpMode {
 
-/*
-    //April Tag Setup
-    public static double DESIRED_DISTANCE = 6.0; //  this is how close the camera should get to the target (inches)
-
-    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
-    //  applied to the drive motors to correct the error.
-    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN = 0.02;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN = 0.015;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURN_GAIN = 0.01;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-
-    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-    boolean targetFound = false;    // Set to true when an AprilTag target is detected
-    double tagDrive = 0;        // Desired forward power/speed (-1 to +1)
-    double strafe = 0;        // Desired strafe power/speed (-1 to +1)
-    double turn = 0;        // Desired turning power/speed (-1 to +1)
-    private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
-    private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
-    private VisionPortal visionPortal;               // Used to manage the video source.
-    private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
-    private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-*/
-
     //pid setup
     private PIDController controller;
     public static double p = 0.005, i = 0, d = 0;
     public static double f = 0;
-    public static double target = 110;
+    public static double target = 200;
 
     //intialize motors
 
@@ -71,11 +46,9 @@ public class teleop_v2 extends LinearOpMode {
     DcMotorEx lift1;
     DcMotorEx lift2;
     DcMotorEx winch;
-    ServoImplEx Arm;
-    ServoImplEx bucket;
+    Servo arm;
+    Servo bucket;
     Servo outtake_lid;
-    AnalogInput sEncoder;
-    AnalogInput sEncoder2;
     Servo pincer_left;
     Servo pincer_right;
     Servo drone;
@@ -86,7 +59,6 @@ public class teleop_v2 extends LinearOpMode {
 
     //lift settings
     public static double liftM = 40;
-    public static double liftMax = 2000;
 
     //winch settings
     public static int wPos = 0;
@@ -94,8 +66,8 @@ public class teleop_v2 extends LinearOpMode {
     public static double wdPower = 1;
 
     //arm and bucket settings
-    public static double aPos = .03;
-    public static double bPosx = .2;
+    public static double aPos;
+    public static double bPosx;
     public static double bChange = .001;
 
     //drive settings
@@ -105,25 +77,25 @@ public class teleop_v2 extends LinearOpMode {
     boolean liftControl = false;
     ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
     int booleanIncrementer = 0;
-    public static double pince_time = 0.2;
+    public static double pince_time = 0.15;
     public static double right_open = 0.3;
-    public static double right_closed = 0.15;
+    public static double right_closed = 0.12;
     public static double left_open = 0.69;
-    public static double left_closed = 0.84;
+    public static double left_closed = 0.87;
 
     //drone setup
     public static double launch = .3;
 
     //bucket lid setup
-    public static double out_shut = 0;
-    public static double out_half = .5;
-    public static double out_open = 1;
+    public static double out_shut = 0.58;
+    public static double out_half = 0.65;
+    public static double out_open = 0.8;
 
     //arm and bucket setup
     public static double bucket_score = 0.75;
     public static double bucket_intake = 0.47;
-    public static double arm_intake = 0.74;
-    public static double arm_score = 0.89;
+    public static double arm_intake = 0.99;
+    public static double arm_score = 0.01;
     public static double lift_intake = 200;
 
 
@@ -135,15 +107,13 @@ public class teleop_v2 extends LinearOpMode {
         // Initialize the Apriltag Detection process
        // initAprilTag();
 
-        target = 200;
+        target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
 
         double  drive;
         double  strafe;
         double  turn;
-        double dPad_strafe = 1;
-        double dPad_drive = 1;
         double drive_speed = 1;
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -166,12 +136,9 @@ public class teleop_v2 extends LinearOpMode {
         lift2.setDirection(DcMotorEx.Direction.REVERSE);
 
 
-        Arm = (ServoImplEx) hardwareMap.get(Servo.class, "Arm");
-        bucket = (ServoImplEx) hardwareMap.get(Servo.class, "bucket");
-        Arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
-        bucket.setPwmRange(new PwmControl.PwmRange(505, 2495));
-        sEncoder = hardwareMap.get(AnalogInput.class, "sEncoder");
-        sEncoder2 = hardwareMap.get(AnalogInput.class, "sEncoder2");
+        arm = hardwareMap.get(Servo.class, "arm");
+        bucket = hardwareMap.get(Servo.class, "bucket");
+
         pincer_left = hardwareMap.get(Servo.class, "pincer_left");
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
         outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
@@ -179,58 +146,12 @@ public class teleop_v2 extends LinearOpMode {
         drone = hardwareMap.get(Servo.class, "drone");
         winch = hardwareMap.get(DcMotorEx.class, "winch");
 
-        /*
-        if (USE_WEBCAM)
-            setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
 
-
-         */
+        outtake_lid.setPosition(out_open);
 
         waitForStart();
 
         while (opModeIsActive()) {
-/*
-//            targetFound = false;
-//            desiredTag = null;
-
-            // Step through the list of detected tags and look for a matching tag
-            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
-            for (AprilTagDetection detection : currentDetections) {
-                // Look to see if we have size info on this tag.
-                if (detection.metadata != null) {
-                    //  Check to see if we want to track towards this tag.
-                    if ((DESIRED_TAG_ID < 0) || (detection.id == DESIRED_TAG_ID)) {
-                        // Yes, we want to use this tag.
-                        targetFound = true;
-                        desiredTag = detection;
-                        break;  // don't look any further.
-                    } else {
-                        // This tag is in the library, but we do not want to track it right now.
-                        telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
-                    }
-                } else {
-                    // This tag is NOT in the library, so we don't have enough information to track to it.
-                    telemetry.addData("Unknown", "Tag ID %d is not in TagLibrary", detection.id);
-                }
-            }
-
-            // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-            if (gamepad1.left_bumper && targetFound) {
-
-                // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-                double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-                double  headingError    = desiredTag.ftcPose.bearing;
-                double  yawError        = desiredTag.ftcPose.yaw;
-
-                // Use the speed and turn "gains" to calculate how we want the robot to move.
-                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-                telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-            }
-            else {
- */
 
 // drive using manual mode, use right bumper for slow mode
 
@@ -242,9 +163,8 @@ public class teleop_v2 extends LinearOpMode {
                 }
 
                 drive  = -gamepad1.left_stick_y * drive_speed;
-                strafe = gamepad1.left_stick_x * drive_speed;
+                strafe = -gamepad1.left_stick_x * drive_speed;
                 turn   = -gamepad1.right_stick_x * drive_speed;
-
 
 
             // Apply desired axes motions to the drivetrain.
@@ -271,13 +191,11 @@ public class teleop_v2 extends LinearOpMode {
             winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             //bucket lid to release pixels
-            if (gamepad1.start) {
-                outtake_lid.setPosition(out_shut);
-            }
-            if (gamepad1.touchpad) {
+
+            if (gamepad1.options) {
                 outtake_lid.setPosition(out_half);
             }
-            if (gamepad1.back) {
+            if (gamepad1.share) {
                 outtake_lid.setPosition(out_open);
             }
 
@@ -294,34 +212,12 @@ public class teleop_v2 extends LinearOpMode {
                 intake.setPower(0);
             }
 
-//pincers: three options --> two buttons, toggle, one button
-
-/*//two buttons method
-
-            if (gamepad2.right_trigger > 0.2) {
-                pincer_right.setPosition(right_closed);
-                pincer_left.setPosition(left_closed);
+//close bucket lid to secure pixels
+            if (gamepad2.start) {
+                outtake_lid.setPosition(out_shut);
             }
-            if (gamepad2.left_trigger > 0.2) {
-                pincer_right.setPosition(right_open);
-                pincer_left.setPosition(left_open);
-            }
-*/
 
-/*//toggle method
-            boolean G2YPressed = ifPressed(gamepad2.y);
-            double pincerPos = pincer_left.getPosition();
-
-            if (G2YPressed && pincerPos == left_open) {
-                pincer_left.setPosition(left_closed);
-                pincer_right.setPosition(right_closed);
-            }
-            else if (G2YPressed && pincerPos == left_closed) {
-                pincer_left.setPosition(left_open);
-                pincer_right.setPosition(right_open);
-            }
- */
-
+//pincers:
 //one button method
             pincer_left.setPosition(left_open);
             pincer_right.setPosition(right_open);
@@ -334,26 +230,22 @@ public class teleop_v2 extends LinearOpMode {
                 }
             }
 
-
-
-
-            double pos = sEncoder.getVoltage() / 3.3 * 360;
-            double pos2 = sEncoder2.getVoltage() / 3.3 * 360;
-
 //right bumper moves the lift up a bit and moves the bucket to scoring position
 //left bumper sends everything to intake positions
             if (gamepad2.right_bumper) {
                 liftControl = true;
-                target = 300;
-                bPosx = bucket_score;
-                aPos = arm_score;
             }
+
             if (gamepad2.left_bumper) {
                 liftControl = false;
             }
 
 
             if (liftControl) {
+
+                target = 700;
+                aPos = arm_score;
+                bPosx = bucket_score;
 
                 //manual lift controls
                 if (gamepad2.left_stick_y < -0.2 || gamepad2.left_stick_y > 0.2) {
@@ -364,21 +256,12 @@ public class teleop_v2 extends LinearOpMode {
                 //hold down the button or press again to send arm to scoring position
                 if (gamepad2.dpad_down) {
                     target = 1100;
-                    if (lift1.getCurrentPosition() > 400) {
-                        aPos = arm_score;
-                    }
                 }
                 if (gamepad2.dpad_left) {
                     target = 2000;
-                    if (lift1.getCurrentPosition() > 400) {
-                        aPos = arm_score;
-                    }
                 }
                 if (gamepad2.dpad_up) {
                     target = 2400;
-                    if (lift1.getCurrentPosition() > 400) {
-                        aPos = arm_score;
-                    }
                 }
 
                 //manual bucket controls
@@ -394,10 +277,12 @@ public class teleop_v2 extends LinearOpMode {
                 //send the arm and bucket back to intake positions
                 aPos = arm_intake;
                 bPosx = bucket_intake;
+
                 //once the arm is actually back, send the lift to intake position
-                if (Arm.getPosition() < 0.2) {
-                    target = lift_intake;
-                }
+             if(gamepad2.back) {
+                 target = lift_intake;
+             }
+
             }
 
 
@@ -418,7 +303,7 @@ public class teleop_v2 extends LinearOpMode {
 
 //send the arm to the current value of the aPos variable
             aPos = Range.clip(aPos, .01, .99);
-            Arm.setPosition(aPos);
+            arm.setPosition(aPos);
 
 //send the bucket to the current value of the bPosx variable
             bPosx = Range.clip(bPosx, .01, .99);
@@ -433,9 +318,7 @@ public class teleop_v2 extends LinearOpMode {
             telemetry.addData("power1", lift1.getPower());
             telemetry.addData("pos2", lift2.getCurrentPosition());
             telemetry.addData("power2", lift2.getPower());
-            telemetry.addData("arm", pos);
             telemetry.addData("arm position", aPos);
-            telemetry.addData("bucket", pos2);
             telemetry.addData("bucket position", bPosx);
             telemetry.addData("pincer_left", pincer_left.getPosition());
             telemetry.addData("pincer_right", pincer_right.getPosition());
