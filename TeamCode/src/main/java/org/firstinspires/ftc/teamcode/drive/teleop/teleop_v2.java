@@ -12,10 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 @Config
 @TeleOp(name = "teleop_v2", group = "teleop")
 public class teleop_v2 extends LinearOpMode {
@@ -60,9 +56,6 @@ public class teleop_v2 extends LinearOpMode {
     public static double bPosx;
     public static double bChange = .001;
 
-    //drive settings
-    public static double drive_slow = 0.5;
-
     //pincer setup
     public static double pince_time = 0.15;
     public static double right_open = 0.3;
@@ -84,6 +77,7 @@ public class teleop_v2 extends LinearOpMode {
     public static double arm_intake = 0.99;
     public static double arm_score = 0.01;
     public static double lift_intake = 200;
+    boolean liftControl = false;
 
 
 
