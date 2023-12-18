@@ -91,7 +91,7 @@ public class teleop_v2 extends LinearOpMode {
 
     public void runOpMode() {
 
-        //intialize the outtake to be 
+        //intialize the outtake to be ready for pixels
         target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
