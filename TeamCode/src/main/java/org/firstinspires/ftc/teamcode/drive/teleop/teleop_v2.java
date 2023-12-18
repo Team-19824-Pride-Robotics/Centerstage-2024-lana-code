@@ -30,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name = "teleop_v2", group = "teleop")
 public class teleop_v2 extends LinearOpMode {
 
+/*
     //April Tag Setup
     public static double DESIRED_DISTANCE = 6.0; //  this is how close the camera should get to the target (inches)
 
@@ -52,7 +53,7 @@ public class teleop_v2 extends LinearOpMode {
     private VisionPortal visionPortal;               // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private AprilTagDetection desiredTag = null;     // Used to hold the data for a detected AprilTag
-
+*/
 
     //pid setup
     private PIDController controller;
@@ -106,9 +107,9 @@ public class teleop_v2 extends LinearOpMode {
     int booleanIncrementer = 0;
     public static double pince_time = 0.2;
     public static double right_open = 0.3;
-    public static double right_closed = 0.1;
+    public static double right_closed = 0.15;
     public static double left_open = 0.69;
-    public static double left_closed = 0.89;
+    public static double left_closed = 0.84;
 
     //drone setup
     public static double launch = .3;
@@ -119,11 +120,11 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_open = 1;
 
     //arm and bucket setup
-    public static double bucket_score = 0.55;
-    public static double bucket_intake = 0.13;
-    public static double arm_intake = 0.13;
+    public static double bucket_score = 0.75;
+    public static double bucket_intake = 0.47;
+    public static double arm_intake = 0.74;
     public static double arm_score = 0.89;
-    public static double lift_intake = 110;
+    public static double lift_intake = 200;
 
 
 
@@ -132,9 +133,9 @@ public class teleop_v2 extends LinearOpMode {
     public void runOpMode() {
 
         // Initialize the Apriltag Detection process
-        initAprilTag();
+       // initAprilTag();
 
-        target = 110;
+        target = 200;
         aPos = arm_intake;
         bPosx = bucket_intake;
 
@@ -178,15 +179,19 @@ public class teleop_v2 extends LinearOpMode {
         drone = hardwareMap.get(Servo.class, "drone");
         winch = hardwareMap.get(DcMotorEx.class, "winch");
 
+        /*
         if (USE_WEBCAM)
             setManualExposure(6, 250);  // Use low exposure time to reduce motion blur
+
+
+         */
 
         waitForStart();
 
         while (opModeIsActive()) {
-
-            targetFound = false;
-            desiredTag = null;
+/*
+//            targetFound = false;
+//            desiredTag = null;
 
             // Step through the list of detected tags and look for a matching tag
             List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -223,36 +228,24 @@ public class teleop_v2 extends LinearOpMode {
                 strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
                 telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-            } else {
+            }
+            else {
+ */
 
-                // drive using manual mode, use right bumper for slow mode
+// drive using manual mode, use right bumper for slow mode
+
                 if(gamepad1.right_bumper) {
                     drive_speed = drive_slow;
                 }
                 else {
                     drive_speed = 1;
                 }
-                if (gamepad1.dpad_right) {
-                    dPad_strafe = 1;
-                }
-                if (gamepad1.dpad_left) {
-                    dPad_strafe = -1;
-                }
-                if (gamepad1.dpad_up) {
-                    dPad_drive = 1;
-                }
-                if (gamepad1.dpad_down) {
-                    dPad_drive = -1;
-                }
-                if(gamepad1.left_stick_y > 0.2 || gamepad1.left_stick_y < -0.2) {
-                    dPad_drive = -gamepad1.left_stick_y;
-                }
 
-                drive  = dPad_drive * drive_speed;
-                strafe = dPad_strafe * drive_speed;
+                drive  = -gamepad1.left_stick_y * drive_speed;
+                strafe = gamepad1.left_stick_x * drive_speed;
                 turn   = -gamepad1.right_stick_x * drive_speed;
 
-            }
+
 
             // Apply desired axes motions to the drivetrain.
             moveRobot(drive, strafe, turn);
@@ -353,6 +346,7 @@ public class teleop_v2 extends LinearOpMode {
                 liftControl = true;
                 target = 300;
                 bPosx = bucket_score;
+                aPos = arm_score;
             }
             if (gamepad2.left_bumper) {
                 liftControl = false;
@@ -490,6 +484,8 @@ public class teleop_v2 extends LinearOpMode {
         BL.setPower(leftBackPower);
         BR.setPower(rightBackPower);
     }
+
+    /*
     private void initAprilTag() {
         // Create the AprilTag processor by using a builder.
         aprilTag = new AprilTagProcessor.Builder().build();
@@ -551,4 +547,6 @@ public class teleop_v2 extends LinearOpMode {
         }
 
     }
+
+     */
 }
