@@ -6,21 +6,11 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
-import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +64,6 @@ public class teleop_v2 extends LinearOpMode {
     public static double drive_slow = 0.5;
 
     //pincer setup
-    boolean liftControl = false;
-    ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
-    int booleanIncrementer = 0;
     public static double pince_time = 0.15;
     public static double right_open = 0.3;
     public static double right_closed = 0.12;
@@ -104,20 +91,14 @@ public class teleop_v2 extends LinearOpMode {
 
     public void runOpMode() {
 
-        // Initialize the Apriltag Detection process
-       // initAprilTag();
-
+        //intialize the outtake to be 
         target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
-
-        double  drive;
-        double  strafe;
-        double  turn;
-        double drive_speed = 1;
+        outtake_lid.setPosition(out_open);
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-//pid
+
         controller = new PIDController(p, i, d);
 
         FR = hardwareMap.get(DcMotorEx.class, "FR");
@@ -138,7 +119,6 @@ public class teleop_v2 extends LinearOpMode {
 
         arm = hardwareMap.get(Servo.class, "arm");
         bucket = hardwareMap.get(Servo.class, "bucket");
-
         pincer_left = hardwareMap.get(Servo.class, "pincer_left");
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
         outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
@@ -147,29 +127,47 @@ public class teleop_v2 extends LinearOpMode {
         winch = hardwareMap.get(DcMotorEx.class, "winch");
 
 
-        outtake_lid.setPosition(out_open);
+
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-// drive using manual mode, use right bumper for slow mode
+// drive using manual mode
 
-                if(gamepad1.right_bumper) {
-                    drive_speed = drive_slow;
-                }
-                else {
-                    drive_speed = 1;
-                }
+            double d_power = .8 - .4 * gamepad1.left_trigger + (.5 * gamepad1.right_trigger);
+            double drive = gamepad1.left_stick_y;
+            double rotate = -gamepad1.right_stick_x;
 
-                drive  = -gamepad1.left_stick_y * drive_speed;
-                strafe = -gamepad1.left_stick_x * drive_speed;
-                turn   = -gamepad1.right_stick_x * drive_speed;
+            BL.setPower(drive + rotate);
+            FL.setPower(drive + rotate);
+            BR.setPower(drive - rotate);
+            FR.setPower(drive - rotate);
 
-
-            // Apply desired axes motions to the drivetrain.
-            moveRobot(drive, strafe, turn);
-            sleep(10);
+            if (gamepad1.dpad_up) {
+                BL.setPower(-d_power);
+                FL.setPower(-d_power);
+                BR.setPower(-d_power);
+                FR.setPower(-d_power);
+            }
+            else if (gamepad1.dpad_down) {
+                BL.setPower(d_power);
+                FL.setPower(d_power);
+                BR.setPower(d_power);
+                FR.setPower(d_power);
+            }
+            else if (gamepad1.dpad_left) {
+                BL.setPower(-d_power);
+                FL.setPower(d_power);
+                BR.setPower(d_power);
+                FR.setPower(-d_power);
+            }
+            else if (gamepad1.dpad_right) {
+                BL.setPower(d_power);
+                FL.setPower(-d_power);
+                BR.setPower(-d_power);
+                FR.setPower(d_power);
+            }
 
 
             //drone
@@ -233,6 +231,7 @@ public class teleop_v2 extends LinearOpMode {
 //right bumper moves the lift up a bit and moves the bucket to scoring position
 //left bumper sends everything to intake positions
             if (gamepad2.right_bumper) {
+                target = 700;
                 liftControl = true;
             }
 
@@ -243,7 +242,6 @@ public class teleop_v2 extends LinearOpMode {
 
             if (liftControl) {
 
-                target = 700;
                 aPos = arm_score;
                 bPosx = bucket_score;
 
@@ -253,7 +251,6 @@ public class teleop_v2 extends LinearOpMode {
                 }
 
                 //dpad buttons send the lift up to the right height
-                //hold down the button or press again to send arm to scoring position
                 if (gamepad2.dpad_down) {
                     target = 1100;
                 }
@@ -265,10 +262,10 @@ public class teleop_v2 extends LinearOpMode {
                 }
 
                 //manual bucket controls
-                if (gamepad2.start && bucket.getPosition() < 0.99) {
+                if (gamepad2.left_stick_button && bucket.getPosition() < 0.99) {
                     bPosx += bChange;
                 }
-                if (gamepad2.share && bucket.getPosition() > 0.01) {
+                if (gamepad2.right_stick_button && bucket.getPosition() > 0.01) {
                     bPosx -= bChange;
                 }
             }
@@ -309,11 +306,8 @@ public class teleop_v2 extends LinearOpMode {
             bPosx = Range.clip(bPosx, .01, .99);
             bucket.setPosition(bPosx);
 
-//reset the boolean incrementer for your toggle trick
-            booleanIncrementer = 0;
-
+//send the relevant variables to the driver station
             telemetry.addData("target", target);
-            telemetry.addData("Run time", getRuntime());
             telemetry.addData("pos1", lift1.getCurrentPosition());
             telemetry.addData("power1", lift1.getPower());
             telemetry.addData("pos2", lift2.getCurrentPosition());
@@ -324,112 +318,5 @@ public class teleop_v2 extends LinearOpMode {
             telemetry.addData("pincer_right", pincer_right.getPosition());
             telemetry.update();
         }
-
     }
-
-    private boolean ifPressed(boolean button) {
-        boolean output = false;
-        if (booleanArray.size() == booleanIncrementer) {
-            booleanArray.add(false);
-        }
-        boolean buttonWas = booleanArray.get(booleanIncrementer);
-        if (button != buttonWas && button) {
-            output = true;
-        }
-        booleanArray.set(booleanIncrementer, button);
-
-        booleanIncrementer += 1;
-        return output;
-    }
-
-    public void moveRobot(double x, double y, double yaw) {
-        // Calculate wheel powers.
-        double leftFrontPower    =  x - y - yaw;
-        double rightFrontPower   =  x + y + yaw;
-        double leftBackPower     =  x + y - yaw;
-        double rightBackPower    =  x - y + yaw;
-
-        // Normalize wheel powers to be less than 1.0
-        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-        max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(rightBackPower));
-
-        if (max > 1.0) {
-            leftFrontPower /= max;
-            rightFrontPower /= max;
-            leftBackPower /= max;
-            rightBackPower /= max;
-        }
-
-        // Send powers to the wheels.
-        FL.setPower(leftFrontPower);
-        FR.setPower(rightFrontPower);
-        BL.setPower(leftBackPower);
-        BR.setPower(rightBackPower);
-    }
-
-    /*
-    private void initAprilTag() {
-        // Create the AprilTag processor by using a builder.
-        aprilTag = new AprilTagProcessor.Builder().build();
-
-        // Adjust Image Decimation to trade-off detection-range for detection-rate.
-        // eg: Some typical detection data using a Logitech C920 WebCam
-        // Decimation = 1 ..  Detect 2" Tag from 10 feet away at 10 Frames per second
-        // Decimation = 2 ..  Detect 2" Tag from 6  feet away at 22 Frames per second
-        // Decimation = 3 ..  Detect 2" Tag from 4  feet away at 30 Frames Per Second
-        // Decimation = 3 ..  Detect 5" Tag from 10 feet away at 30 Frames Per Second
-        // Note: Decimation can be changed on-the-fly to adapt during a match.
-        aprilTag.setDecimation(2);
-
-        // Create the vision portal by using a builder.
-        if (USE_WEBCAM) {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                    .addProcessor(aprilTag)
-                    .build();
-        } else {
-            visionPortal = new VisionPortal.Builder()
-                    .setCamera(BuiltinCameraDirection.BACK)
-                    .addProcessor(aprilTag)
-                    .build();
-        }
-    }
-
-    private void setManualExposure ( int exposureMS, int gain){
-        // Wait for the camera to be open, then use the controls
-
-        if (visionPortal == null) {
-            return;
-        }
-
-        // Make sure camera is streaming before we try to set the exposure controls
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-        // Set camera controls unless we are stopping.
-        if (!isStopRequested())
-        {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-        }
-
-    }
-
-     */
 }

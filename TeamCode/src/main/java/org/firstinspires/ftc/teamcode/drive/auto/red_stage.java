@@ -46,7 +46,7 @@ public class red_stage extends OpMode
     DcMotorEx intake;
     DcMotorEx lift1;
     DcMotorEx lift2;
-    ServoImplEx Arm;
+    ServoImplEx arm;
     ServoImplEx bucket;
     // AnalogInput sEncoder;
     AnalogInput sEncoder;
@@ -90,9 +90,9 @@ public class red_stage extends OpMode
         lift2.setDirection(DcMotorEx.Direction.REVERSE);
 
 
-        Arm= (ServoImplEx) hardwareMap.get(Servo.class, "Arm");
+        arm = (ServoImplEx) hardwareMap.get(Servo.class, "arm");
         bucket = (ServoImplEx) hardwareMap.get(Servo.class, "bucket");
-        Arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
+        arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
         bucket.setPwmRange(new PwmControl.PwmRange(505, 2495));
         sEncoder = hardwareMap.get(AnalogInput.class, "sEncoder");
         sEncoder2 = hardwareMap.get(AnalogInput.class, "sEncoder2");
@@ -216,7 +216,7 @@ public class red_stage extends OpMode
         liftpos1 = lift1.getCurrentPosition();
         liftpos2 = lift2.getCurrentPosition();
 
-        Arm.setPosition(aPos);
+        arm.setPosition(aPos);
         bucket.setPosition(bPosx);
        // intake.update();
         double pos = sEncoder.getVoltage() / 3.3 * 360;
