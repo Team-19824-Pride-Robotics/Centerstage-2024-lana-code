@@ -79,6 +79,9 @@ public class teleop_v2 extends LinearOpMode {
     public static double lift_intake = 200;
     boolean liftControl = false;
 
+    //speed multiplier for driver practice
+    public static double drive_speed_M = 0.5;
+
 
 
 
@@ -130,8 +133,8 @@ public class teleop_v2 extends LinearOpMode {
 // drive using manual mode
 
             double d_power = .8 - .4 * gamepad1.left_trigger + (.5 * gamepad1.right_trigger);
-            double drive = gamepad1.left_stick_y;
-            double rotate = -gamepad1.right_stick_x;
+            double drive = gamepad1.left_stick_y * drive_speed_M;
+            double rotate = -gamepad1.right_stick_x * drive_speed_M;
 
             BL.setPower(drive + rotate);
             FL.setPower(drive + rotate);
@@ -139,28 +142,28 @@ public class teleop_v2 extends LinearOpMode {
             FR.setPower(drive - rotate);
 
             if (gamepad1.dpad_up) {
-                BL.setPower(-d_power);
-                FL.setPower(-d_power);
-                BR.setPower(-d_power);
-                FR.setPower(-d_power);
+                BL.setPower(-d_power * drive_speed_M);
+                FL.setPower(-d_power * drive_speed_M);
+                BR.setPower(-d_power * drive_speed_M);
+                FR.setPower(-d_power * drive_speed_M);
             }
             else if (gamepad1.dpad_down) {
-                BL.setPower(d_power);
-                FL.setPower(d_power);
-                BR.setPower(d_power);
-                FR.setPower(d_power);
+                BL.setPower(d_power * drive_speed_M);
+                FL.setPower(d_power * drive_speed_M);
+                BR.setPower(d_power * drive_speed_M);
+                FR.setPower(d_power * drive_speed_M);
             }
             else if (gamepad1.dpad_left) {
-                BL.setPower(-d_power);
-                FL.setPower(d_power);
-                BR.setPower(d_power);
-                FR.setPower(-d_power);
+                BL.setPower(-d_power * drive_speed_M);
+                FL.setPower(d_power * drive_speed_M);
+                BR.setPower(d_power * drive_speed_M);
+                FR.setPower(-d_power * drive_speed_M);
             }
             else if (gamepad1.dpad_right) {
-                BL.setPower(d_power);
-                FL.setPower(-d_power);
-                BR.setPower(-d_power);
-                FR.setPower(d_power);
+                BL.setPower(d_power * drive_speed_M);
+                FL.setPower(-d_power * drive_speed_M);
+                BR.setPower(-d_power * drive_speed_M);
+                FR.setPower(d_power * drive_speed_M);
             }
 
 
