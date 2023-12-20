@@ -122,10 +122,10 @@ public class teleop_v2 extends LinearOpMode {
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         drone = hardwareMap.get(Servo.class, "drone");
         winch = hardwareMap.get(DcMotorEx.class, "winch");
+        winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-
-
+        
         waitForStart();
 
         while (opModeIsActive()) {
