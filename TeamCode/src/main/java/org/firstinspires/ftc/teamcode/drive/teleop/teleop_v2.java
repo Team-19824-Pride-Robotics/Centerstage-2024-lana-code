@@ -54,7 +54,7 @@ public class teleop_v2 extends LinearOpMode {
     //arm and bucket settings
     public static double aPos;
     public static double bPosx;
-    public static double bChange = .001;
+    public static double bChange = .01;
 
     //pincer setup
     public static double pince_time = 0.15;
@@ -92,7 +92,7 @@ public class teleop_v2 extends LinearOpMode {
         target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
-        //outtake_lid.setPosition(out_open);
+
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -125,7 +125,7 @@ public class teleop_v2 extends LinearOpMode {
         winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        
+        //outtake_lid.setPosition(out_open);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -185,7 +185,7 @@ public class teleop_v2 extends LinearOpMode {
             winch.setPower(wdPower);
             winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            //bucket lid to release pixels
+            //bucket lid to release pixels - options releases, then share opens the rest of the way
 
             if (gamepad1.options) {
                 outtake_lid.setPosition(out_half);
