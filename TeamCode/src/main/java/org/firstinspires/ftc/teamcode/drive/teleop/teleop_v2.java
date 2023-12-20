@@ -67,16 +67,16 @@ public class teleop_v2 extends LinearOpMode {
     public static double launch = .3;
 
     //bucket lid setup
-    public static double out_shut = 0.58;
-    public static double out_half = 0.65;
-    public static double out_open = 0.8;
+    public static double out_shut = 0.9;
+    public static double out_half = 0.78;
+    public static double out_open = 0.6;
 
     //arm and bucket setup
-    public static double bucket_score = 0.75;
-    public static double bucket_intake = 0.47;
+    public static double bucket_score = 0.4;
+    public static double bucket_intake = 0.19;
     public static double arm_intake = 0.99;
     public static double arm_score = 0.01;
-    public static double lift_intake = 200;
+    public static double lift_intake = 250;
     boolean liftControl = false;
 
     //speed multiplier for driver practice
@@ -92,7 +92,7 @@ public class teleop_v2 extends LinearOpMode {
         target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
-        outtake_lid.setPosition(out_open);
+        //outtake_lid.setPosition(out_open);
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -228,11 +228,12 @@ public class teleop_v2 extends LinearOpMode {
 //right bumper moves the lift up a bit and moves the bucket to scoring position
 //left bumper sends everything to intake positions
             if (gamepad2.right_bumper) {
-                target = 700;
+                target = 400;
                 liftControl = true;
             }
 
             if (gamepad2.left_bumper) {
+                target = 400;
                 liftControl = false;
             }
 
