@@ -207,6 +207,14 @@ public class teleop_v2 extends LinearOpMode {
                 intake.setPower(0);
             }
 
+//manual bucket controls
+            if (gamepad2.left_stick_button && bucket.getPosition() < 0.99) {
+                bPosx += bChange;
+            }
+            if (gamepad2.right_stick_button && bucket.getPosition() > 0.01) {
+                bPosx -= bChange;
+            }
+
 //close bucket lid to secure pixels
             if (gamepad2.start) {
                 outtake_lid.setPosition(out_shut);
@@ -259,13 +267,6 @@ public class teleop_v2 extends LinearOpMode {
                     target = 2400;
                 }
 
-                //manual bucket controls
-                if (gamepad2.left_stick_button && bucket.getPosition() < 0.99) {
-                    bPosx += bChange;
-                }
-                if (gamepad2.right_stick_button && bucket.getPosition() > 0.01) {
-                    bPosx -= bChange;
-                }
             }
 
             if (!liftControl) {
