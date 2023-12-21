@@ -277,18 +277,19 @@ public class teleop_v2 extends LinearOpMode {
                 aPos = arm_intake;
                 bPosx = bucket_intake;
 
+                //use the encoder to see if the arm is *actually* back, then send the lift to intake position
+                double arm_encoder_position = armEncoder.getVoltage() / 3.3 * 360;
+
+                if(arm_encoder_position >= 14 && arm_encoder_position <= 18) {
+                    target = lift_intake;
+                }
+
+//////////////////OR
+                /*
                 //once the arm is back in position, send the lift back to intake position
                 if(gamepad2.back) {
                     target = lift_intake;
                 }
-//////////////////OR
-                /*
-                //use the encoder to see if the arm is actually back, then send the lift to intake position
-                double arm_encoder_position = armEncoder.getVoltage() / 3.3 * 360;
-
-                 if(arm_encoder_position >= 14 && arm_encoder_position <= 18) {
-                     target = lift_intake;
-                 }
 
                  */
             }
