@@ -6,9 +6,11 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -32,12 +34,13 @@ public class teleop_v2 extends LinearOpMode {
     DcMotorEx lift1;
     DcMotorEx lift2;
     DcMotorEx winch;
-    Servo arm;
+    ServoImplEx arm;
     Servo bucket;
     Servo outtake_lid;
     Servo pincer_left;
     Servo pincer_right;
     Servo drone;
+    AnalogInput armEncoder;
 
     //intake settings
     public static double power = 1;
@@ -88,7 +91,7 @@ public class teleop_v2 extends LinearOpMode {
 
     public void runOpMode() {
 
-        //intialize the outtake to be ready for pixels
+        //initialize the outtake to be ready for pixels
         target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
@@ -114,7 +117,7 @@ public class teleop_v2 extends LinearOpMode {
         lift2.setDirection(DcMotorEx.Direction.REVERSE);
 
 
-        arm = hardwareMap.get(Servo.class, "arm");
+        arm = hardwareMap.get(ServoImplEx.class, "arm");
         bucket = hardwareMap.get(Servo.class, "bucket");
         pincer_left = hardwareMap.get(Servo.class, "pincer_left");
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
@@ -208,10 +211,10 @@ public class teleop_v2 extends LinearOpMode {
             }
 
 //manual bucket controls
-            if (gamepad2.left_stick_button && bucket.getPosition() < 0.99) {
+            if (gamepad2.left_stick_button && bPosx < bucket_score) {
                 bPosx += bChange;
             }
-            if (gamepad2.right_stick_button && bucket.getPosition() > 0.01) {
+            if (gamepad2.right_stick_button && bPosx > bucket_intake) {
                 bPosx -= bChange;
             }
 
@@ -274,11 +277,20 @@ public class teleop_v2 extends LinearOpMode {
                 aPos = arm_intake;
                 bPosx = bucket_intake;
 
-                //once the arm is actually back, send the lift to intake position
-             if(gamepad2.back) {
-                 target = lift_intake;
-             }
+                //once the arm is back in position, send the lift back to intake position
+                if(gamepad2.back) {
+                    target = lift_intake;
+                }
+//////////////////OR
+                /*
+                //use the encoder to see if the arm is actually back, then send the lift to intake position
+                double arm_encoder_position = armEncoder.getVoltage() / 3.3 * 360;
 
+                 if(arm_encoder_position >= 14 && arm_encoder_position <= 18) {
+                     target = lift_intake;
+                 }
+
+                 */
             }
 
 
