@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
@@ -58,6 +59,7 @@ public class teleop_v2 extends LinearOpMode {
     public static double aPos;
     public static double bPosx;
     public static double bChange = .01;
+    //double arm_encoder_position;
 
     //pincer setup
     public static double pince_time = 0.15;
@@ -71,15 +73,15 @@ public class teleop_v2 extends LinearOpMode {
 
     //bucket lid setup
     public static double out_shut = 0.9;
-    public static double out_half = 0.78;
+    public static double out_half = 0.75;
     public static double out_open = 0.6;
 
     //arm and bucket setup
     public static double bucket_score = 0.4;
     public static double bucket_intake = 0.19;
-    public static double arm_intake = 0.99;
+    public static double arm_intake = 0.96;
     public static double arm_score = 0.01;
-    public static double lift_intake = 250;
+    public static double lift_intake = 200;
     boolean liftControl = false;
 
     //speed multiplier for driver practice
@@ -95,6 +97,7 @@ public class teleop_v2 extends LinearOpMode {
         target = lift_intake;
         aPos = arm_intake;
         bPosx = bucket_intake;
+
 
         
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -118,6 +121,8 @@ public class teleop_v2 extends LinearOpMode {
 
 
         arm = hardwareMap.get(ServoImplEx.class, "arm");
+        arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
+        armEncoder = hardwareMap.get(AnalogInput.class, "arm_encoder");
         bucket = hardwareMap.get(Servo.class, "bucket");
         pincer_left = hardwareMap.get(Servo.class, "pincer_left");
         pincer_right = hardwareMap.get(Servo.class, "pincer_right");
@@ -128,7 +133,8 @@ public class teleop_v2 extends LinearOpMode {
         winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //outtake_lid.setPosition(out_open);
+
+        outtake_lid.setPosition(out_open);
         waitForStart();
 
         while (opModeIsActive()) {
@@ -272,26 +278,30 @@ public class teleop_v2 extends LinearOpMode {
 
             }
 
+            double arm_encoder_position = armEncoder.getVoltage() / 3.3 * 360;
+
             if (!liftControl) {
                 //send the arm and bucket back to intake positions
                 aPos = arm_intake;
                 bPosx = bucket_intake;
 
                 //use the encoder to see if the arm is *actually* back, then send the lift to intake position
-                double arm_encoder_position = armEncoder.getVoltage() / 3.3 * 360;
 
-                if(arm_encoder_position >= 14 && arm_encoder_position <= 18) {
+
+                if(arm_encoder_position > 300) {
                     target = lift_intake;
                 }
 
+
 //////////////////OR
-                /*
+/*
                 //once the arm is back in position, send the lift back to intake position
                 if(gamepad2.back) {
                     target = lift_intake;
                 }
 
-                 */
+ */
+
             }
 
 
@@ -320,11 +330,12 @@ public class teleop_v2 extends LinearOpMode {
 
 //send the relevant variables to the driver station
             telemetry.addData("target", target);
-            telemetry.addData("pos1", lift1.getCurrentPosition());
-            telemetry.addData("power1", lift1.getPower());
-            telemetry.addData("pos2", lift2.getCurrentPosition());
-            telemetry.addData("power2", lift2.getPower());
+//            telemetry.addData("pos1", lift1.getCurrentPosition());
+//            telemetry.addData("power1", lift1.getPower());
+//            telemetry.addData("pos2", lift2.getCurrentPosition());
+//            telemetry.addData("power2", lift2.getPower());
             telemetry.addData("arm position", aPos);
+            telemetry.addData("arm encoder position", arm_encoder_position);
             telemetry.addData("bucket position", bPosx);
             telemetry.addData("pincer_left", pincer_left.getPosition());
             telemetry.addData("pincer_right", pincer_right.getPosition());
