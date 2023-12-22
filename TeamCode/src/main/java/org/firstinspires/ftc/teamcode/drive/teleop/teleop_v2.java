@@ -77,10 +77,13 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_open = 0.6;
 
     //arm and bucket setup
-    public static double bucket_score = 0.4;
+    public static double bucket_score_high = 0.4;
+    public static double bucket_score_low = 0.35;
+
     public static double bucket_intake = 0.19;
     public static double arm_intake = 0.96;
-    public static double arm_score = 0.01;
+    public static double arm_score_high = 0.01;
+    public static double arm_score_low = 0.35;
     public static double lift_intake = 200;
     boolean liftControl = false;
 
@@ -217,7 +220,7 @@ public class teleop_v2 extends LinearOpMode {
             }
 
 //manual bucket controls
-            if (gamepad2.left_stick_button && bPosx < bucket_score) {
+            if (gamepad2.left_stick_button && bPosx < bucket_score_high) {
                 bPosx += bChange;
             }
             if (gamepad2.right_stick_button && bPosx > bucket_intake) {
@@ -246,6 +249,8 @@ public class teleop_v2 extends LinearOpMode {
 //left bumper sends everything to intake positions
             if (gamepad2.right_bumper) {
                 target = 400;
+                aPos = arm_score_low;
+                bPosx = bucket_score_low;
                 liftControl = true;
             }
 
@@ -257,23 +262,19 @@ public class teleop_v2 extends LinearOpMode {
 
             if (liftControl) {
 
-                aPos = arm_score;
-                bPosx = bucket_score;
-
                 //manual lift controls
                 if (gamepad2.left_stick_y < -0.2 || gamepad2.left_stick_y > 0.2) {
                     target += -gamepad2.left_stick_y * liftM;
                 }
 
-                //dpad buttons send the lift up to the right height
+                //dpad buttons to change the arm position from low to high
                 if (gamepad2.dpad_down) {
-                    target = 1100;
-                }
-                if (gamepad2.dpad_left) {
-                    target = 2000;
+                    aPos = arm_score_low;
+                    bPosx = bucket_score_low;
                 }
                 if (gamepad2.dpad_up) {
-                    target = 2400;
+                    aPos = arm_score_high;
+                    bPosx = bucket_score_high;
                 }
 
             }
