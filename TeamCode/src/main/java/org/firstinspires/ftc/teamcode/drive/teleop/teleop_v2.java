@@ -264,7 +264,9 @@ public class teleop_v2 extends LinearOpMode {
 
                 //manual lift controls
                 if (gamepad2.left_stick_y < -0.2 || gamepad2.left_stick_y > 0.2) {
-                    target += -gamepad2.left_stick_y * liftM;
+
+                        target += -gamepad2.left_stick_y * liftM;
+
                 }
 
                 //dpad buttons to change the arm position from low to high
