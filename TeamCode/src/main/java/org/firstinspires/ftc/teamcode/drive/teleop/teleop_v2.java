@@ -83,12 +83,12 @@ public class teleop_v2 extends LinearOpMode {
     public static double bucket_intake = 0.19;
     public static double arm_intake = 0.96;
     public static double arm_score_high = 0.01;
-    public static double arm_score_low = 0.20;
+    public static double arm_score_low = 0.15;
     public static double lift_intake = 200;
     boolean liftControl = false;
 
     //speed multiplier for driver practice
-    public static double drive_speed_M = 0.5;
+    public static double drive_speed_M = 1;
 
 
 
@@ -154,28 +154,28 @@ public class teleop_v2 extends LinearOpMode {
             FR.setPower(drive - rotate);
 
             if (gamepad1.dpad_up) {
-                BL.setPower(-d_power * drive_speed_M);
-                FL.setPower(-d_power * drive_speed_M);
-                BR.setPower(-d_power * drive_speed_M);
-                FR.setPower(-d_power * drive_speed_M);
+                BL.setPower(-d_power);
+                FL.setPower(-d_power);
+                BR.setPower(-d_power);
+                FR.setPower(-d_power);
             }
             else if (gamepad1.dpad_down) {
-                BL.setPower(d_power * drive_speed_M);
-                FL.setPower(d_power * drive_speed_M);
-                BR.setPower(d_power * drive_speed_M);
-                FR.setPower(d_power * drive_speed_M);
+                BL.setPower(d_power);
+                FL.setPower(d_power);
+                BR.setPower(d_power);
+                FR.setPower(d_power);
             }
             else if (gamepad1.dpad_left) {
-                BL.setPower(-d_power * drive_speed_M);
-                FL.setPower(d_power * drive_speed_M);
-                BR.setPower(d_power * drive_speed_M);
-                FR.setPower(-d_power * drive_speed_M);
+                BL.setPower(-d_power);
+                FL.setPower(d_power);
+                BR.setPower(d_power);
+                FR.setPower(-d_power);
             }
             else if (gamepad1.dpad_right) {
-                BL.setPower(d_power * drive_speed_M);
-                FL.setPower(-d_power * drive_speed_M);
-                BR.setPower(-d_power * drive_speed_M);
-                FR.setPower(d_power * drive_speed_M);
+                BL.setPower(d_power);
+                FL.setPower(-d_power);
+                BR.setPower(-d_power);
+                FR.setPower(d_power);
             }
 
 
@@ -287,9 +287,9 @@ public class teleop_v2 extends LinearOpMode {
                 //send the arm and bucket back to intake positions
                 aPos = arm_intake;
                 bPosx = bucket_intake;
+                outtake_lid.setPosition(out_open);
 
                 //use the encoder to see if the arm is *actually* back, then send the lift to intake position
-
 
                 if(arm_encoder_position > 300) {
                     target = lift_intake;
