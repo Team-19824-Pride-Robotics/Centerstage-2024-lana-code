@@ -52,7 +52,7 @@ public class teleop_v2 extends LinearOpMode {
 
     //winch settings
     public static int wPos = 0;
-    public static int wSpeed = 50;
+    public static int wSpeed = 150;
     public static double wdPower = 1;
 
     //arm and bucket settings
@@ -257,6 +257,7 @@ public class teleop_v2 extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 target = 400;
                 liftControl = false;
+                outtake_lid.setPosition(out_open);
             }
 
 
@@ -287,7 +288,7 @@ public class teleop_v2 extends LinearOpMode {
                 //send the arm and bucket back to intake positions
                 aPos = arm_intake;
                 bPosx = bucket_intake;
-                outtake_lid.setPosition(out_open);
+
 
                 //use the encoder to see if the arm is *actually* back, then send the lift to intake position
 
