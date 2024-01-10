@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
+import java.util.ArrayList;
 
 
 @Config
@@ -89,6 +90,9 @@ public class teleop_v2 extends LinearOpMode {
 
     //speed multiplier for driver practice
     public static double drive_speed_M = 1;
+    public boolean pincer_toggle = false;
+    ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
+    int boolean_incrementer = 0;
 
 
 
@@ -211,6 +215,7 @@ public class teleop_v2 extends LinearOpMode {
 //intake
             if (gamepad2.x) {
                 intake.setPower(power);
+                outtake_lid.setPosition(out_open);
             }
             if (gamepad2.b) {
                 intake.setPower(backPower);
@@ -235,7 +240,8 @@ public class teleop_v2 extends LinearOpMode {
 
 //pincers:
 //one button method
-            pincer_left.setPosition(left_open);
+
+     /*       pincer_left.setPosition(left_open);
             pincer_right.setPosition(right_open);
 
             if (gamepad2.y) {
@@ -245,6 +251,22 @@ public class teleop_v2 extends LinearOpMode {
                     pincer_right.setPosition(right_closed);
                 }
             }
+
+      */
+
+//toggle method
+            pincer_toggle = gamepad2.y;
+            boolean G1y_pressed = ifPressed(pincer_toggle);
+
+            if(G1y_pressed && (pincer_left.getPosition() == left_closed)) {
+                pincer_left.setPosition(left_open);
+                pincer_right.setPosition(right_open);
+            }
+            else if (G1y_pressed && (pincer_left.getPosition() == left_open)) {
+                pincer_left.setPosition(left_closed);
+                pincer_right.setPosition(right_closed);
+            }
+
 
 //right bumper moves the lift up a bit and moves the bucket to scoring position
 //left bumper sends everything to intake positions
@@ -333,6 +355,8 @@ public class teleop_v2 extends LinearOpMode {
             bPosx = Range.clip(bPosx, .01, .99);
             bucket.setPosition(bPosx);
 
+            boolean_incrementer = 0;
+
 //send the relevant variables to the driver station
             telemetry.addData("target", target);
 //            telemetry.addData("pos1", lift1.getCurrentPosition());
@@ -346,5 +370,26 @@ public class teleop_v2 extends LinearOpMode {
             telemetry.addData("pincer_right", pincer_right.getPosition());
             telemetry.update();
         }
+
     }
+
+    //when G1y changes states from what it previously was
+    private boolean ifPressed(boolean button) {
+        boolean output = false;
+        boolean buttonWas = booleanArray.get(boolean_incrementer);
+
+        if(booleanArray.size() == boolean_incrementer) {
+            booleanArray.add(false);
+        }
+        if(button != buttonWas && button == true) {
+            output = true;
+        }
+
+        booleanArray.set(boolean_incrementer, button);
+
+        boolean_incrementer += 1;
+        return output;
+    }
+
+
 }
