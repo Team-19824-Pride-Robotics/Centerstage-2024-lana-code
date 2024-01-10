@@ -63,10 +63,10 @@ public class teleop_v2 extends LinearOpMode {
 
     //pincer setup
     public static double pince_time = 0.15;
-    public static double right_open = 0.3;
-    public static double right_closed = 0.12;
-    public static double left_open = 0.69;
-    public static double left_closed = 0.87;
+    public static double right_open = 0.38;
+    public static double right_closed = 0.15;
+    public static double left_open = 0.60;
+    public static double left_closed = 0.80;
 
     //drone setup
     public static double launch = .3;
@@ -217,6 +217,7 @@ public class teleop_v2 extends LinearOpMode {
             }
             if (gamepad2.a) {
                 intake.setPower(0);
+                outtake_lid.setPosition(out_shut);
             }
 
 //manual bucket controls
