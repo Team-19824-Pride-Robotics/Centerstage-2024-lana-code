@@ -64,9 +64,9 @@ public class teleop_v2 extends LinearOpMode {
 
     //pincer setup
     public static double pince_time = 0.15;
-    public static double right_open = 0.38;
+    public static double right_open = 0.55;
     public static double right_closed = 0.15;
-    public static double left_open = 0.60;
+    public static double left_open = 0.40;
     public static double left_closed = 0.80;
 
     //drone setup
@@ -78,8 +78,8 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_open = 0.6;
 
     //arm and bucket setup
-    public static double bucket_score_high = 0.4;
-    public static double bucket_score_low = 0.35;
+    public static double bucket_score_high = 0.60;
+    public static double bucket_score_low = 0.55;
 
     public static double bucket_intake = 0.19;
     public static double arm_intake = 0.96;
@@ -90,7 +90,6 @@ public class teleop_v2 extends LinearOpMode {
 
     //speed multiplier for driver practice
     public static double drive_speed_M = 1;
-    public boolean pincer_toggle = false;
     ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
     int boolean_incrementer = 0;
 
@@ -106,7 +105,6 @@ public class teleop_v2 extends LinearOpMode {
         bPosx = bucket_intake;
 
 
-        
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         controller = new PIDController(p, i, d);
@@ -142,6 +140,11 @@ public class teleop_v2 extends LinearOpMode {
 
 
         outtake_lid.setPosition(out_open);
+
+        //initialize the pincers to the "open" position
+        pincer_left.setPosition(left_open);
+        pincer_right.setPosition(right_open);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -255,14 +258,14 @@ public class teleop_v2 extends LinearOpMode {
       */
 
 //toggle method
-            pincer_toggle = gamepad2.y;
-            boolean G1y_pressed = ifPressed(pincer_toggle);
+            boolean G2y_pressed = ifPressed(gamepad2.y);
+            double pincerPos = pincer_left.getPosition();
 
-            if(G1y_pressed && (pincer_left.getPosition() == left_closed)) {
+            if(G2y_pressed && pincerPos > 0.7) {
                 pincer_left.setPosition(left_open);
                 pincer_right.setPosition(right_open);
             }
-            else if (G1y_pressed && (pincer_left.getPosition() == left_open)) {
+            if (G2y_pressed && pincerPos <= 0.7) {
                 pincer_left.setPosition(left_closed);
                 pincer_right.setPosition(right_closed);
             }
@@ -373,15 +376,17 @@ public class teleop_v2 extends LinearOpMode {
 
     }
 
-    //when G1y changes states from what it previously was
+    //when G2y changes states from what it previously was
     private boolean ifPressed(boolean button) {
         boolean output = false;
-        boolean buttonWas = booleanArray.get(boolean_incrementer);
 
         if(booleanArray.size() == boolean_incrementer) {
             booleanArray.add(false);
         }
-        if(button != buttonWas && button == true) {
+
+        boolean buttonWas = booleanArray.get(boolean_incrementer);
+
+        if(button != buttonWas && button) {
             output = true;
         }
 
