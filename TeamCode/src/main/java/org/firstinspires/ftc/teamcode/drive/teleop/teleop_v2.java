@@ -78,14 +78,16 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_open = 0.6;
 
     //arm and bucket setup
-    public static double bucket_score_high = 0.60;
-    public static double bucket_score_low = 0.55;
+    public static double bucket_score_high = 0.40;
+    public static double bucket_score_low = 0.35;
 
     public static double bucket_intake = 0.19;
     public static double arm_intake = 0.96;
     public static double arm_score_high = 0.01;
     public static double arm_score_low = 0.15;
     public static double lift_intake = 200;
+    public static double lift_low = 0;
+    public static double bucket_low = 0.4;
     boolean liftControl = false;
 
     //speed multiplier for driver practice
@@ -229,12 +231,12 @@ public class teleop_v2 extends LinearOpMode {
             }
 
 //manual bucket controls
-            if (gamepad2.left_stick_button && bPosx < bucket_score_high) {
-                bPosx += bChange;
-            }
-            if (gamepad2.right_stick_button && bPosx > bucket_intake) {
-                bPosx -= bChange;
-            }
+//            if (gamepad2.left_stick_button && bPosx < bucket_score_high) {
+//                bPosx += bChange;
+//            }
+//            if (gamepad2.right_stick_button && bPosx > bucket_intake) {
+//                bPosx -= bChange;
+//            }
 
 //close bucket lid to secure pixels
             if (gamepad2.start) {
@@ -318,8 +320,13 @@ public class teleop_v2 extends LinearOpMode {
 
                 //use the encoder to see if the arm is *actually* back, then send the lift to intake position
 
-                if(arm_encoder_position > 300) {
+                if(arm_encoder_position > 300 && !gamepad2.left_stick_button) {
                     target = lift_intake;
+                }
+
+                else if (arm_encoder_position > 300 && gamepad2.left_stick_button) {
+                    bPosx = bucket_low;
+                    target = lift_low;
                 }
 
 
