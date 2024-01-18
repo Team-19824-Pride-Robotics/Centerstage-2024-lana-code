@@ -43,10 +43,11 @@ public class blue_stage extends OpMode
 
     public SampleMecanumDrive drive;
 
-    DcMotorEx intake;
+    DcMotor intake;
     DcMotorEx lift1;
     DcMotorEx lift2;
     ServoImplEx arm;
+    Servo outtake_lid;
     ServoImplEx bucket;
     // AnalogInput sEncoder;
     AnalogInput sEncoder;
@@ -78,7 +79,7 @@ public class blue_stage extends OpMode
 
          drive = new SampleMecanumDrive(hardwareMap);
 
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
       lift1 = hardwareMap.get(DcMotorEx.class, "lift1");
       lift1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -91,6 +92,7 @@ public class blue_stage extends OpMode
 
         arm = (ServoImplEx) hardwareMap.get(Servo.class, "arm");
         bucket = (ServoImplEx) hardwareMap.get(Servo.class, "bucket");
+        outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
         arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
         bucket.setPwmRange(new PwmControl.PwmRange(505, 2495));
         sEncoder = hardwareMap.get(AnalogInput.class, "sEncoder");
@@ -165,19 +167,23 @@ public class blue_stage extends OpMode
                 })
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
-                    aPos = .99;
+                    aPos = 0.15;
                 })
                 .waitSeconds(2)
                 .addTemporalMarker(() -> {
-                    bPosx = .9;
+                    bPosx = 0.35;
                 })
+                .waitSeconds(0.5)
+                        .addTemporalMarker(() -> {
+                            outtake_lid.setPosition(0.75);
+                        })
                 //wait for the pixel to get scored
                 .waitSeconds(2)
                 .addTemporalMarker(() -> {
-                    bPosx = .09;
+                    bPosx = 0.4;
                 })
                 .addTemporalMarker(() -> {
-                    aPos = .12;
+                    aPos = 0.96;
                 })
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
@@ -219,12 +225,12 @@ public class blue_stage extends OpMode
         bucket.setPosition(bPosx);
        // intake.update();
         double pos = sEncoder.getVoltage() / 3.3 * 360;
-        double pos2 = sEncoder2.getVoltage() / 3.3 * 360;
+        //double pos2 = sEncoder2.getVoltage() / 3.3 * 360;
 
         telemetry.addData("liftpos1", liftpos1);
         telemetry.addData("liftpos1", liftpos1);
         telemetry.addData("arm", pos);
-        telemetry.addData("bucket", pos2);
+        //telemetry.addData("bucket", pos2);
         telemetry.update();
     }
 
