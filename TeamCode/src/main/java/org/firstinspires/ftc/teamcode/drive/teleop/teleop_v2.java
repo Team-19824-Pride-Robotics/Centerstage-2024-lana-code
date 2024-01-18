@@ -343,7 +343,7 @@ public class teleop_v2 extends LinearOpMode {
 
 
 //send the lift to the current value of the target variable
-            target = Range.clip(target, 10, 2400);
+            target = Range.clip(target, 0, 2400);
             controller.setPID(p, i, d);
             int liftPos1 = lift1.getCurrentPosition();
             int liftPos2 = lift2.getCurrentPosition();
