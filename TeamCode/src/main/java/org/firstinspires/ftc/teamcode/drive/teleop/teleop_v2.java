@@ -320,11 +320,11 @@ public class teleop_v2 extends LinearOpMode {
 
                 //use the encoder to see if the arm is *actually* back, then send the lift to intake position
 
-                if(arm_encoder_position > 300 && !gamepad2.left_stick_button) {
+                if(arm_encoder_position > 300 && !gamepad1.left_bumper) {
                     target = lift_intake;
                 }
 
-                else if (arm_encoder_position > 300 && gamepad2.left_stick_button) {
+                else if (arm_encoder_position > 300 && gamepad1.left_bumper) {
                     bPosx = bucket_low;
                     target = lift_low;
                 }
