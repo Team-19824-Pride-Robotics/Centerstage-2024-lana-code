@@ -68,6 +68,8 @@ public class teleop_v2 extends LinearOpMode {
     public static double right_closed = 0.15;
     public static double left_open = 0.40;
     public static double left_closed = 0.80;
+    public static double left_middle = 0.60;
+
 
     //drone setup
     public static double launch = .3;
@@ -245,8 +247,8 @@ public class teleop_v2 extends LinearOpMode {
 
 //pincers:
 //one button method
-
-     /*       pincer_left.setPosition(left_open);
+/*
+            pincer_left.setPosition(left_open);
             pincer_right.setPosition(right_open);
 
             if (gamepad2.y) {
@@ -257,20 +259,24 @@ public class teleop_v2 extends LinearOpMode {
                 }
             }
 
-      */
+ */
+
+
 
 //toggle method
             boolean G2y_pressed = ifPressed(gamepad2.y);
             double pincerPos = pincer_left.getPosition();
 
-            if(G2y_pressed && pincerPos > 0.7) {
+            if(G2y_pressed && pincerPos > left_middle) {
                 pincer_left.setPosition(left_open);
                 pincer_right.setPosition(right_open);
             }
-            if (G2y_pressed && pincerPos <= 0.7) {
+            if (G2y_pressed && pincerPos <= left_middle) {
                 pincer_left.setPosition(left_closed);
                 pincer_right.setPosition(right_closed);
             }
+
+
 
 
 //right bumper moves the lift up a bit and moves the bucket to scoring position
@@ -327,6 +333,8 @@ public class teleop_v2 extends LinearOpMode {
                 else if (arm_encoder_position > 300 && gamepad1.left_bumper) {
                     bPosx = bucket_low;
                     target = lift_low;
+                    pincer_left.setPosition(left_closed);
+                    pincer_right.setPosition(right_closed);
                 }
 
 
