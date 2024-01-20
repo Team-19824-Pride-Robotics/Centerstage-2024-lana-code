@@ -80,13 +80,13 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_open = 0.6;
 
     //arm and bucket setup
-    public static double bucket_score_high = 0.40;
-    public static double bucket_score_low = 0.35;
+    public static double bucket_score_high = 0.37;
+    public static double bucket_score_low = 0.25;
 
-    public static double bucket_intake = 0.19;
-    public static double arm_intake = 0.96;
-    public static double arm_score_high = 0.01;
-    public static double arm_score_low = 0.15;
+    public static double bucket_intake = 0.16;
+    public static double arm_intake = 0.88;
+    public static double arm_score_high = 0.30;
+    public static double arm_score_low = 0.45;
     public static double lift_intake = 200;
     public static double lift_low = 0;
     public static double bucket_low = 0.4;
