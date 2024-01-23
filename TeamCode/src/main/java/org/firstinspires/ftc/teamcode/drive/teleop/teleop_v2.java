@@ -65,9 +65,9 @@ public class teleop_v2 extends LinearOpMode {
     //pincer setup
     public static double pince_time = 0.15;
     public static double right_open = 0.55;
-    public static double right_closed = 0.15;
+    public static double right_closed = 0.83;
     public static double left_open = 0.40;
-    public static double left_closed = 0.80;
+    public static double left_closed = 0.65;
     public static double left_middle = 0.60;
 
 
@@ -80,10 +80,10 @@ public class teleop_v2 extends LinearOpMode {
     public static double out_open = 0.6;
 
     //arm and bucket setup
-    public static double bucket_score_high = 0.37;
-    public static double bucket_score_low = 0.25;
+    public static double bucket_score_high = 0.335;
+    public static double bucket_score_low = 0.214;
 
-    public static double bucket_intake = 0.16;
+    public static double bucket_intake = 0.10;
     public static double arm_intake = 0.88;
     public static double arm_score_high = 0.30;
     public static double arm_score_low = 0.45;
@@ -142,7 +142,7 @@ public class teleop_v2 extends LinearOpMode {
         winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
+        wPos = 0;
         outtake_lid.setPosition(out_open);
 
         //initialize the pincers to the "open" position

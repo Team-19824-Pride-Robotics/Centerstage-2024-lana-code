@@ -147,37 +147,38 @@ public class blue_stage extends OpMode
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
                 .back(10)
-
                 .waitSeconds(1)
-
                 .addTemporalMarker(() -> {
                     target = 500;
                 })
+
                 //drive to the middle of the spike marks and point the intake at the correct one
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
+
                 //turn the intake on for long enough to spit out the purple pixel
                 .addTemporalMarker(() -> intake.setPower(-0.5))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.setPower(0))
+
                 //back up a bit to make sure you don't hit the pixel
                 .forward(2)
-                //raise the lift and move the arm and bucket into position
 
+                //raise the lift and move the arm and bucket into position
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> {
                     aPos = 0.45;
-                    bPosx = 0.25;
+                    bPosx = 0.214;
                     test = 1;
                 })
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> {
                     target = score;
                 })
-                //strafe back towards the wall and then forward some to go around the scored pixel
+
                 //drive over to the backdrop with the lift facing it
                 .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
-
                 .waitSeconds(0.5)
+
                 //open the door to score the pixel
                 .addTemporalMarker(() -> {
                     outtake_lid.setPosition(0.6);

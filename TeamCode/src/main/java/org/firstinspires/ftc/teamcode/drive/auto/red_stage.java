@@ -28,8 +28,8 @@ public class red_stage extends OpMode
     public static double y1 = 5;
     public static double h1 = 0;
     public static double ht1 = -10;
-    public static double x2 = -20;
-    public static double y2 = 34;
+    public static double x2 = -18;
+    public static double y2 = 31;
     public static double h2 = 85;
     public static double ht2 = 0;
     public static double x3 = -45;
@@ -47,10 +47,10 @@ public class red_stage extends OpMode
     DcMotorEx lift1;
     DcMotorEx lift2;
     ServoImplEx arm;
-    ServoImplEx bucket;
-    // AnalogInput sEncoder;
-    AnalogInput sEncoder;
-    AnalogInput sEncoder2;
+    Servo bucket;
+    Servo outtake_lid;
+    AnalogInput arm_encoder;
+
 
     public static int a = 500;
     public static int b = 100;
@@ -64,17 +64,17 @@ public class red_stage extends OpMode
     double liftpos1;
     double liftpos2;
 
-    double aPos =.14;
+    double aPos =.15;
 
-    public static double bPosx =.42 ;
+    public static double bPosx =.35 ;
 
-    public static double score = 500;
+    public static double score = 250;
 
     @Override
     public void init() {
-
-        bPosx =.42;
-        aPos = .14;
+        target = 0;
+        bPosx = 0.40;
+        aPos = 0.88;
         controller = new PIDController(p,i,d);
 
          drive = new SampleMecanumDrive(hardwareMap);
@@ -91,19 +91,16 @@ public class red_stage extends OpMode
 
 
         arm = (ServoImplEx) hardwareMap.get(Servo.class, "arm");
-        bucket = (ServoImplEx) hardwareMap.get(Servo.class, "bucket");
+        bucket = hardwareMap.get(Servo.class, "bucket");
         arm.setPwmRange(new PwmControl.PwmRange(505, 2495));
-        bucket.setPwmRange(new PwmControl.PwmRange(505, 2495));
-        sEncoder = hardwareMap.get(AnalogInput.class, "sEncoder");
-        sEncoder2 = hardwareMap.get(AnalogInput.class, "sEncoder2");
+        arm_encoder = hardwareMap.get(AnalogInput.class, "arm_encoder");
+        outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
 
         distance1 = hardwareMap.get(DistanceSensor.class, "distance1");
         distance3 = hardwareMap.get(DistanceSensor.class, "distance3");
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
         telemetry.addData("Status", "Initialized");
-
 
     }
 
@@ -115,21 +112,19 @@ public class red_stage extends OpMode
             y1 = 8;
             h1 = 0;
 
-            x2 = -16;
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
             x1 = -25.5;
             y1 = -5;
             h1 = 0;
 
-            x2 = -23;
+
         }
         else {
             x1 = -20;
             y1 = -9;
             h1 = 45;
 
-            x2 = -30;
         }
 
         telemetry.addData("distance3", distance3.getDistance(DistanceUnit.CM));
@@ -145,50 +140,66 @@ public class red_stage extends OpMode
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
                 .back(10)
-                .addTemporalMarker(() -> {
-                    target = 250;
-                })
                 .waitSeconds(1)
+                .addTemporalMarker(() -> {
+                    target = 500;
+                })
+
                 //drive to the middle of the spike marks and point the intake at the correct one
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
+
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(0.75))
+                .addTemporalMarker(() -> intake.setPower(-0.5))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.setPower(0))
+
                 //back up a bit to make sure you don't hit the pixel
                 .forward(2)
-                //strafe back towards the wall and then forward some to go around the scored pixel
+
+                //raise the lift and move the arm and bucket into position
+                .waitSeconds(.5)
+                .addTemporalMarker(() -> {
+                    aPos = 0.45;
+                    bPosx = 0.214;
+                })
+                .waitSeconds(.5)
+                .addTemporalMarker(() -> {
+                    target = score;
+                })
+
                 //drive over to the backdrop with the lift facing it
                 .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
-                //update the lift, arm,and bucket values to score the pixel
+                .waitSeconds(0.5)
+
+                //open the door to score the pixel
                 .addTemporalMarker(() -> {
-                        target = score;
+                    outtake_lid.setPosition(0.6);
+                })
+
+                //wait for the pixel to get scored
+                .waitSeconds(2)
+
+                //move out of the way in case the other team needs to get there
+                .back(6)
+
+                //raise the lift back up to get the arm back in
+                .addTemporalMarker(() -> {
+                    target = 500;
                 })
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
-                    aPos = .99;
-                })
-                .waitSeconds(2)
-                .addTemporalMarker(() -> {
-                    bPosx = .9;
-                })
-                //wait for the pixel to get scored
-                .waitSeconds(2)
-                .addTemporalMarker(() -> {
-                    bPosx = .09;
+                    bPosx = 0.4;
                 })
                 .addTemporalMarker(() -> {
-                    aPos = .12;
+                    aPos = 0.88;
                 })
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
                     target = 0;
                 })
                 .waitSeconds(1)
-                //move out of the way in case the other team needs to get there
-                .back(1)
-                .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
 
+                .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
 
                 .build();
 
@@ -218,14 +229,14 @@ public class red_stage extends OpMode
 
         arm.setPosition(aPos);
         bucket.setPosition(bPosx);
+
        // intake.update();
-        double pos = sEncoder.getVoltage() / 3.3 * 360;
-        double pos2 = sEncoder2.getVoltage() / 3.3 * 360;
+        double pos = arm_encoder.getVoltage() / 3.3 * 360;
+
 
         telemetry.addData("liftpos1", liftpos1);
         telemetry.addData("liftpos1", liftpos1);
         telemetry.addData("arm", pos);
-        telemetry.addData("bucket", pos2);
         telemetry.update();
     }
 
