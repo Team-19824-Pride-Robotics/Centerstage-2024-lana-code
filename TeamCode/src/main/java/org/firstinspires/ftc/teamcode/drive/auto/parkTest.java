@@ -29,7 +29,13 @@ public class parkTest extends OpMode
     public static double h1 = 0;
     public static double x2 = -20;
     public static double y2 = -40;
-    public static double h2 = 0;
+    public static double h2 = 0;3
+    public static double x3 = -20;
+    public static double y3 = -40;
+    public static double h3 = 0;
+    public static double x4 = -20;
+    public static double y4 = -40;
+    public static double h4 = 0;
 
     public SampleMecanumDrive drive;
 
@@ -67,6 +73,10 @@ public class parkTest extends OpMode
                 .back(10)
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
                 .lineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)))
+                .forward(10)
+                .lineToLinearHeading(new Pose2d(x3, y3, Math.toRadians(h3)))
+                .back(20)
+                .lineToLinearHeading(new Pose2d(x4, y4, Math.toRadians(h4)))
 
 
 
