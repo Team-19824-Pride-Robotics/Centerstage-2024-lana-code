@@ -83,7 +83,11 @@ public class teleop_v2 extends LinearOpMode {
     public static double bucket_score_high = 0.335;
     public static double bucket_score_low = 0.214;
 
+<<<<<<< Updated upstream
     public static double bucket_intake = 0.10;
+=======
+    public static double bucket_intake = 0.12;
+>>>>>>> Stashed changes
     public static double arm_intake = 0.88;
     public static double arm_score_high = 0.30;
     public static double arm_score_low = 0.45;
@@ -96,6 +100,8 @@ public class teleop_v2 extends LinearOpMode {
     public static double drive_speed_M = 1;
     ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
     int boolean_incrementer = 0;
+
+    double rightrigger =0;
 
 
 
@@ -152,6 +158,8 @@ public class teleop_v2 extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+
+            rightrigger = gamepad1.right_trigger;
 
 // drive using manual mode
 
@@ -326,11 +334,11 @@ public class teleop_v2 extends LinearOpMode {
 
                 //use the encoder to see if the arm is *actually* back, then send the lift to intake position
 
-                if(arm_encoder_position > 300 && !gamepad1.left_bumper) {
+                if(arm_encoder_position > 300 && rightrigger <.3) {
                     target = lift_intake;
                 }
 
-                else if (arm_encoder_position > 300 && gamepad1.left_bumper) {
+                else if (arm_encoder_position > 300 && rightrigger > .3) {
                     bPosx = bucket_low;
                     target = lift_low;
                     pincer_left.setPosition(left_closed);

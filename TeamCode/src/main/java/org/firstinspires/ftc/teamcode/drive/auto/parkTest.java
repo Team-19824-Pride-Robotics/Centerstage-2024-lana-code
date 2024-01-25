@@ -29,7 +29,7 @@ public class parkTest extends OpMode
     public static double h1 = 0;
     public static double x2 = -20;
     public static double y2 = -40;
-    public static double h2 = 0;3
+    public static double h2 = 0;
     public static double x3 = -20;
     public static double y3 = -40;
     public static double h3 = 0;
