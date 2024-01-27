@@ -114,10 +114,10 @@ public class blue_stage extends OpMode
 
         if (distance2.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = -10;
+            y1 = -11;
             h1 = 0;
 
-            x2 = -19;
+            x2 = -15;
         }
         else if (distance4.getDistance(DistanceUnit.CM)<200) {
             x1 = -25.5;
