@@ -29,13 +29,13 @@ public class blue_stage extends OpMode
     public static double h1 = 0;
     public static double ht1 = -10;
     public static double x2 = -35;
-    public static double y2 = -32.5;
-    public static double h2 = -85;
+    public static double y2 = -34;
+    public static double h2 = -75;
     public static double ht2 = 0;
-    public static double x3 = -45;
-    public static double y3 = -33;
-    public static double h3 = -80;
-    public static double ht3 = -10;
+    public static double x3 = -40;
+    public static double y3 = -45;
+    public static double h3 = -60;
+    public static double ht3 = 0;
 
 
     DistanceSensor distance2;
@@ -114,8 +114,8 @@ public class blue_stage extends OpMode
 
         if (distance2.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = -11;
-            h1 = 0;
+            y1 = -3;
+            h1 = 45;
 
             x2 = -15;
         }
@@ -124,14 +124,14 @@ public class blue_stage extends OpMode
             y1 = 5;
             h1 = 0;
 
-            x2 = -23;
+            x2 = -22;
         }
         else {
             x1 = -22;
-            y1 = 9;
+            y1 = 8;
             h1 = -45;
 
-            x2 = -30;
+            x2 = -28;
         }
 
         telemetry.addData("distance4", distance4.getDistance(DistanceUnit.CM));
