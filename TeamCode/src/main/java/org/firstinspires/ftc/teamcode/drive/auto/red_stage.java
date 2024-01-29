@@ -24,17 +24,17 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class red_stage extends OpMode
 {
 
-    public static double x1 = -30;
+    public static double x1 = -22;
     public static double y1 = 5;
     public static double h1 = 0;
     public static double ht1 = -10;
     public static double x2 = -18;
-    public static double y2 = 31;
+    public static double y2 = 31.5;
     public static double h2 = 85;
-    public static double ht2 = 0;
+    public static double ht2 = 180;
     public static double x3 = -45;
     public static double y3 = 33;
-    public static double h3 = 86;
+    public static double h3 = 70;
     public static double ht3 = -10;
 
 
@@ -109,22 +109,28 @@ public class red_stage extends OpMode
 
         if (distance1.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = -3;
-            h1 = 45;
+            y1 = 2;
+            h1 = -45;
+
+            x2 = -17;
+            y2 = 33;
 
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
-            x1 = -25.5;
-            y1 = -5;
+            x1 = -24;
+            y1 = 0;
             h1 = 0;
 
-
+            x2 = -23.5;
+            y2 = 34;
         }
         else {
             x1 = -22;
-            y1 = 8;
-            h1 = -45;
+            y1 = -9;
+            h1 = 45;
 
+            x2 = -28;
+            y2 = 33;
         }
 
         telemetry.addData("distance3", distance3.getDistance(DistanceUnit.CM));
@@ -139,7 +145,7 @@ public class red_stage extends OpMode
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                .back(5)
+                .back(2)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
                     target = 500;
@@ -168,7 +174,7 @@ public class red_stage extends OpMode
                 })
 
                 //drive over to the backdrop with the lift facing it
-                .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
+                .lineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)))
                 .waitSeconds(0.5)
 
                 //open the door to score the pixel
