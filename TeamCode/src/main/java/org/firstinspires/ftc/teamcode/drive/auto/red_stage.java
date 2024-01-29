@@ -112,8 +112,8 @@ public class red_stage extends OpMode
             y1 = 2;
             h1 = -45;
 
-            x2 = -17;
-            y2 = 33;
+            x2 = -18.5;
+            y2 = 32;
 
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
@@ -122,7 +122,7 @@ public class red_stage extends OpMode
             h1 = 0;
 
             x2 = -23.5;
-            y2 = 34;
+            y2 = 31.5;
         }
         else {
             x1 = -22;
@@ -130,7 +130,7 @@ public class red_stage extends OpMode
             h1 = 45;
 
             x2 = -28;
-            y2 = 33;
+            y2 = 31.5;
         }
 
         telemetry.addData("distance3", distance3.getDistance(DistanceUnit.CM));
@@ -155,12 +155,12 @@ public class red_stage extends OpMode
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
 
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(-0.5))
+                .addTemporalMarker(() -> intake.setPower(-0.4))
                 .waitSeconds(0.5)
                 .addTemporalMarker(() -> intake.setPower(0))
 
                 //back up a bit to make sure you don't hit the pixel
-                .forward(2)
+                .forward(4.5)
 
                 //raise the lift and move the arm and bucket into position
                 .waitSeconds(.5)
@@ -186,7 +186,7 @@ public class red_stage extends OpMode
                 .waitSeconds(2)
 
                 //move out of the way in case the other team needs to get there
-                .back(6)
+                .back(4)
 
                 //raise the lift back up to get the arm back in
                 .addTemporalMarker(() -> {
@@ -239,7 +239,10 @@ public class red_stage extends OpMode
        // intake.update();
         double pos = arm_encoder.getVoltage() / 3.3 * 360;
 
-
+        Pose2d poseEstimate = drive.getPoseEstimate();
+        telemetry.addData("x", poseEstimate.getX());
+        telemetry.addData("y", poseEstimate.getY());
+        telemetry.addData("heading", poseEstimate.getHeading());
         telemetry.addData("liftpos1", liftpos1);
         telemetry.addData("liftpos1", liftpos1);
         telemetry.addData("arm", pos);
