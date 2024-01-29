@@ -103,7 +103,7 @@ public class blue_aud extends OpMode
 
         if (distance1.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = 2;
+            y1 = 1;
             h1 = -45;
 
             x2 = -15;

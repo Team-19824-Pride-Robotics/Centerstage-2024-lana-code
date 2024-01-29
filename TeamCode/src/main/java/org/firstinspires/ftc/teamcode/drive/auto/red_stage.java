@@ -109,8 +109,8 @@ public class red_stage extends OpMode
 
         if (distance1.getDistance(DistanceUnit.CM)<200) {
             x1 = -22;
-            y1 = 8;
-            h1 = 0;
+            y1 = -3;
+            h1 = 45;
 
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
@@ -121,9 +121,9 @@ public class red_stage extends OpMode
 
         }
         else {
-            x1 = -20;
-            y1 = -9;
-            h1 = 45;
+            x1 = -22;
+            y1 = 8;
+            h1 = -45;
 
         }
 
@@ -139,7 +139,7 @@ public class red_stage extends OpMode
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                .back(10)
+                .back(5)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
                     target = 500;

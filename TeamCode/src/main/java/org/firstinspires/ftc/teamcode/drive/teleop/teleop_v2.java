@@ -64,7 +64,7 @@ public class teleop_v2 extends LinearOpMode {
 
     //pincer setup
     public static double pince_time = 0.15;
-    public static double right_open = 0.55;
+    public static double right_open = 0.61;
     public static double right_closed = 0.83;
     public static double left_open = 0.40;
     public static double left_closed = 0.65;
