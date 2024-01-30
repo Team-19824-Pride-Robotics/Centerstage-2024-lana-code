@@ -113,7 +113,7 @@ public class red_stage extends OpMode
             h1 = -45;
 
             x2 = -18.5;
-            y2 = 32;
+            y2 = 33;
 
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
@@ -122,15 +122,15 @@ public class red_stage extends OpMode
             h1 = 0;
 
             x2 = -23.5;
-            y2 = 31.5;
+            y2 = 33;
         }
         else {
             x1 = -22;
             y1 = -9;
             h1 = 45;
 
-            x2 = -28;
-            y2 = 31.5;
+            x2 = -30;
+            y2 = 33;
         }
 
         telemetry.addData("distance3", distance3.getDistance(DistanceUnit.CM));
@@ -186,7 +186,7 @@ public class red_stage extends OpMode
                 .waitSeconds(2)
 
                 //move out of the way in case the other team needs to get there
-                .back(4)
+                .back(5)
 
                 //raise the lift back up to get the arm back in
                 .addTemporalMarker(() -> {
