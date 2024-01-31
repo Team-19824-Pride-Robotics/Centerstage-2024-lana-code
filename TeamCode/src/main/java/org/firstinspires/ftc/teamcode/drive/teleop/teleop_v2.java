@@ -75,8 +75,8 @@ public class teleop_v2 extends LinearOpMode {
     public static double launch = .3;
 
     //bucket lid setup
-    public static double out_shut = 0.9;
-    public static double out_half = 0.75;
+    public static double out_shut = 0.3;
+    public static double out_half = 0.35;
     public static double out_open = 0.6;
 
     //arm and bucket setup

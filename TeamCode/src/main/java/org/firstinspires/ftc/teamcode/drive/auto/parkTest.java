@@ -24,15 +24,15 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 public class parkTest extends OpMode
 {
 
-    public static double x1 = -22;
-    public static double y1 = -10;
-    public static double h1 = 0;
-    public static double x2 = -20;
-    public static double y2 = -40;
-    public static double h2 = 0;
-    public static double x3 = -20;
-    public static double y3 = -40;
-    public static double h3 = 0;
+    public static double x1 = -20.5;
+    public static double y1 = 1.5;
+    public static double h1 = -45;
+    public static double x2 = -18.5;
+    public static double y2 = 33;
+    public static double h2 = 85;
+    public static double x3 = -45;
+    public static double y3 = 35;
+    public static double h3 = 70;
     public static double x4 = -20;
     public static double y4 = -40;
     public static double h4 = 0;

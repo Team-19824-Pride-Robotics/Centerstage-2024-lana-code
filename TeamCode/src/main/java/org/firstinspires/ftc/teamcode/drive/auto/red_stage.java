@@ -33,7 +33,7 @@ public class red_stage extends OpMode
     public static double h2 = 85;
     public static double ht2 = 180;
     public static double x3 = -45;
-    public static double y3 = 33;
+    public static double y3 = 35;
     public static double h3 = 70;
     public static double ht3 = -10;
 
@@ -108,25 +108,25 @@ public class red_stage extends OpMode
     public void init_loop() {
 
         if (distance1.getDistance(DistanceUnit.CM)<200) {
-            x1 = -22;
+            x1 = -24;
             y1 = 2;
-            h1 = -45;
+            h1 = -35;
 
             x2 = -18.5;
             y2 = 33;
 
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
-            x1 = -24;
-            y1 = 0;
+            x1 = -26.5;
+            y1 = -2;
             h1 = 0;
 
-            x2 = -23.5;
+            x2 = -23;
             y2 = 33;
         }
         else {
-            x1 = -22;
-            y1 = -9;
+            x1 = -23;
+            y1 = -9.5;
             h1 = 45;
 
             x2 = -30;
@@ -155,9 +155,9 @@ public class red_stage extends OpMode
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
 
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(-0.4))
-                .waitSeconds(0.5)
-                .addTemporalMarker(() -> intake.setPower(0))
+              //  .addTemporalMarker(() -> intake.setPower(-0.6))
+               // .waitSeconds(0.8)
+                //.addTemporalMarker(() -> intake.setPower(0))
 
                 //back up a bit to make sure you don't hit the pixel
                 .forward(4.5)
