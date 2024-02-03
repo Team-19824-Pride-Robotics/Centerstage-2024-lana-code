@@ -179,7 +179,7 @@ public class red_stage extends OpMode
 
                 //open the door to score the pixel
                 .addTemporalMarker(() -> {
-                    outtake_lid.setPosition(0.6);
+                    outtake_lid.setPosition(0.01);
                 })
 
                 //wait for the pixel to get scored
