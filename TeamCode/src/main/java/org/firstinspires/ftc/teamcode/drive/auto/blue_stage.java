@@ -30,11 +30,11 @@ public class blue_stage extends OpMode
     public static double ht1 = -10;
     public static double x2 = -35;
     public static double y2 = -34;
-    public static double h2 = -75;
+    public static double h2 = -78;
     public static double ht2 = 0;
     public static double x3 = -40;
     public static double y3 = -45;
-    public static double h3 = -60;
+    public static double h3 = -90;
     public static double ht3 = 0;
 
 
@@ -113,25 +113,28 @@ public class blue_stage extends OpMode
     public void init_loop() {
 
         if (distance2.getDistance(DistanceUnit.CM)<200) {
-            x1 = -22;
-            y1 = -3;
-            h1 = 45;
+            x1 = -24;
+            y1 = -5;
+            h1 = 25;
 
-            x2 = -15;
+            x2 = -14.5;
+            y2= -33;
         }
         else if (distance4.getDistance(DistanceUnit.CM)<200) {
-            x1 = -25.5;
+            x1 = -24;
             y1 = 5;
             h1 = 0;
 
             x2 = -22;
+            y2=-33;
         }
         else {
-            x1 = -22;
+            x1 = -23;
             y1 = 8;
             h1 = -45;
 
-            x2 = -28;
+            x2 = -27;
+            y2 =-34;
         }
 
         telemetry.addData("distance4", distance4.getDistance(DistanceUnit.CM));
@@ -146,7 +149,7 @@ public class blue_stage extends OpMode
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence trajSeq = drive.trajectorySequenceBuilder(startPose)
-                .back(10)
+                .back(5)
                 .waitSeconds(1)
                 .addTemporalMarker(() -> {
                     target = 500;
@@ -156,19 +159,18 @@ public class blue_stage extends OpMode
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
 
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(-0.5))
-                .waitSeconds(0.5)
+                .addTemporalMarker(() -> intake.setPower(-0.6))
+                .waitSeconds(1)
                 .addTemporalMarker(() -> intake.setPower(0))
 
                 //back up a bit to make sure you don't hit the pixel
-                .forward(2)
+                .forward(4.5)
 
                 //raise the lift and move the arm and bucket into position
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> {
                     aPos = 0.45;
                     bPosx = 0.214;
-                    test = 1;
                 })
                 .waitSeconds(.5)
                 .addTemporalMarker(() -> {
@@ -176,7 +178,7 @@ public class blue_stage extends OpMode
                 })
 
                 //drive over to the backdrop with the lift facing it
-                .splineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)), Math.toRadians(ht2))
+                .lineToLinearHeading(new Pose2d(x2, y2, Math.toRadians(h2)))
                 .waitSeconds(0.5)
 
                 //open the door to score the pixel
@@ -188,7 +190,7 @@ public class blue_stage extends OpMode
                 .waitSeconds(2)
 
                 //move out of the way in case the other team needs to get there
-                .back(6)
+                .back(8)
 
                 //raise the lift back up to get the arm back in
                 .addTemporalMarker(() -> {

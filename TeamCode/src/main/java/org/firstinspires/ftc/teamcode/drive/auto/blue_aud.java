@@ -102,23 +102,23 @@ public class blue_aud extends OpMode
     public void init_loop() {
 
         if (distance1.getDistance(DistanceUnit.CM)<200) {
-            x1 = -22;
-            y1 = 1;
-            h1 = -45;
+            x1 = -24;
+            y1 = 5;
+            h1 = -25;
 
             x2 = -15;
 
         }
         else if (distance3.getDistance(DistanceUnit.CM)<200) {
-            x1 = -25;
-            y1 = 0;
+            x1 = -24;
+            y1 = -5;
             h1 = 0;
 
             x2 = -22;
 
         }
         else {
-            x1 = -22;
+            x1 = -23;
             y1 = -8;
             h1 = 45;
 
@@ -142,8 +142,8 @@ public class blue_aud extends OpMode
                 //drive to the middle of the spike marks and point the intake at the correct one
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(-0.50))
-                .waitSeconds(0.5)
+                .addTemporalMarker(() -> intake.setPower(-0.60))
+                .waitSeconds(1)
                 .addTemporalMarker(() -> intake.setPower(0))
                 //back up a bit to make sure you don't hit the pixel
                 .forward(5)
