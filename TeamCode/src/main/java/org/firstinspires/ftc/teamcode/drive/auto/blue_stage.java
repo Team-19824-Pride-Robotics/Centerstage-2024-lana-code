@@ -30,10 +30,10 @@ public class blue_stage extends OpMode
     public static double ht1 = -10;
     public static double x2 = -35;
     public static double y2 = -34;
-    public static double h2 = -78;
+    public static double h2 = -82;
     public static double ht2 = 0;
     public static double x3 = -40;
-    public static double y3 = -45;
+    public static double y3 = -34;
     public static double h3 = -90;
     public static double ht3 = 0;
 
@@ -114,18 +114,18 @@ public class blue_stage extends OpMode
 
         if (distance2.getDistance(DistanceUnit.CM)<200) {
             x1 = -24;
-            y1 = -5;
-            h1 = 25;
+            y1 = -8.5;
+            h1 = 10;
 
-            x2 = -14.5;
+            x2 = -18.5;
             y2= -33;
         }
         else if (distance4.getDistance(DistanceUnit.CM)<200) {
-            x1 = -24;
-            y1 = 5;
+            x1 = -25;
+            y1 = 2.5;
             h1 = 0;
 
-            x2 = -22;
+            x2 = -23.75;
             y2=-33;
         }
         else {
@@ -133,7 +133,7 @@ public class blue_stage extends OpMode
             y1 = 8;
             h1 = -45;
 
-            x2 = -27;
+            x2 = -28;
             y2 =-34;
         }
 
