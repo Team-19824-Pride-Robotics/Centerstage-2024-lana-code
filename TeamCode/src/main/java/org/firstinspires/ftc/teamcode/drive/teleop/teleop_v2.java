@@ -268,7 +268,7 @@ public class teleop_v2 extends LinearOpMode {
 
 
 //toggle method
-            boolean G2y_pressed = ifPressed(gamepad2.y);
+           /* boolean G2y_pressed = ifPressed(gamepad2.y);
             double pincerPos = pincer_left.getPosition();
 
             if(G2y_pressed && pincerPos > left_middle) {
@@ -278,6 +278,19 @@ public class teleop_v2 extends LinearOpMode {
             if (G2y_pressed && pincerPos <= left_middle) {
                 pincer_left.setPosition(left_closed);
                 pincer_right.setPosition(right_closed);
+            }
+
+            */
+
+            //two button method
+            if(gamepad2.right_trigger > 0.1) {
+                pincer_left.setPosition(left_closed);
+                pincer_right.setPosition(right_closed);
+            }
+
+            if(gamepad2.left_trigger > 0.1) {
+                pincer_left.setPosition(left_open);
+                pincer_right.setPosition(right_open);
             }
 
 
