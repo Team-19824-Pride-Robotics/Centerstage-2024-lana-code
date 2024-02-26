@@ -147,9 +147,9 @@ public class teleop_v2 extends LinearOpMode {
         wPos = 0;
         outtake_lid.setPosition(out_open);
 
-        //initialize the pincers to the "open" position
-        pincer_left.setPosition(left_open);
-        pincer_right.setPosition(right_open);
+        //initialize the pincers to the "closed" position
+        pincer_left.setPosition(left_closed);
+        pincer_right.setPosition(right_closed);
 
         waitForStart();
 
