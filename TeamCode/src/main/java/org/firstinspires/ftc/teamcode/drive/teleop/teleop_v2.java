@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
+
 import java.util.ArrayList;
 
 
@@ -65,9 +66,9 @@ public class teleop_v2 extends LinearOpMode {
     //pincer setup
     public static double pince_time = 0.15;
     public static double right_open = 0.61;
-    public static double right_closed = 0.83;
+    public static double right_closed = 0.93;
     public static double left_open = 0.40;
-    public static double left_closed = 0.65;
+    public static double left_closed = 0.71;
     public static double left_middle = 0.60;
 
 
@@ -97,7 +98,7 @@ public class teleop_v2 extends LinearOpMode {
     ArrayList<Boolean> booleanArray = new ArrayList<Boolean>();
     int boolean_incrementer = 0;
 
-    double rightrigger =0;
+    double rightrigger = 0;
 
 
 
@@ -289,8 +290,17 @@ public class teleop_v2 extends LinearOpMode {
             }
 
             if(gamepad2.left_trigger > 0.1) {
-                pincer_left.setPosition(left_open);
-                pincer_right.setPosition(right_open);
+                if (gamepad2.y) {
+                    resetRuntime();
+                    while (getRuntime() < pince_time) {
+                        pincer_left.setPosition(left_closed-0.11);
+                        pincer_right.setPosition(right_closed-0.12);
+                    }
+                }
+                else {
+                    pincer_left.setPosition(left_open);
+                    pincer_right.setPosition(right_open);
+                }
             }
 
 
@@ -317,7 +327,7 @@ public class teleop_v2 extends LinearOpMode {
                 //manual lift controls
                 if (gamepad2.left_stick_y < -0.2 || gamepad2.left_stick_y > 0.2) {
 
-                        target += -gamepad2.left_stick_y * liftM;
+                    target += -gamepad2.left_stick_y * liftM;
 
                 }
 
