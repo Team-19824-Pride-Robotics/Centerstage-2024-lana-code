@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous(name="blue_aud", group="auto")
-public class blue_aud extends OpMode
+@Autonomous(name="blue_aud_Pen", group="auto")
+public class blue_aud_Pen_Proto extends OpMode
 {
 
     public static double x1 = -30;
@@ -52,8 +52,8 @@ public class blue_aud extends OpMode
     ServoImplEx arm;
     Servo outtake_lid;
     Servo bucket;
-    Servo PenL;
-    Servo PenR;
+    Servo PinL;
+    Servo PinR;
     // AnalogInput sEncoder;
     AnalogInput arm_encoder;
 
@@ -80,8 +80,8 @@ public class blue_aud extends OpMode
         lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift2.setDirection(DcMotorEx.Direction.REVERSE);
-        PenL = hardwareMap(Servo.class, );
-        PenR = hardwareMap(Servo.class, );
+        PinL = hardwareMap(Servo.class, "pincer_left");
+        PinR = hardwareMap(Servo.class, "pincer_right");
         arm = (ServoImplEx) hardwareMap.get(Servo.class, "arm");
         bucket = hardwareMap.get(Servo.class, "bucket");
         outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
@@ -144,9 +144,12 @@ public class blue_aud extends OpMode
                 //drive to the middle of the spike marks and point the intake at the correct one
                 .lineToLinearHeading(new Pose2d(x1, y1, Math.toRadians(h1)))
                 //turn the intake on for long enough to spit out the purple pixel
-                .addTemporalMarker(() -> intake.setPower(-0.60))
-                .waitSeconds(1)
-                .addTemporalMarker(() -> intake.setPower(0))
+                //.addTemporalMarker(() -> intake.setPower(-0.60))
+                .addTemporalMarker(() -> PinR.setPosition(.93))
+                .addTemporalMarker(() -> PinL.setPosition(0.71))
+
+                //.waitSeconds(1)
+                //.addTemporalMarker(() -> intake.setPower(0))
                 //back up a bit to make sure you don't hit the pixel
                 .forward(5)
 /*
