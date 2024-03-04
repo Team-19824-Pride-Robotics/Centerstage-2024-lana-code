@@ -80,8 +80,8 @@ public class blue_aud_Pen_Proto extends OpMode
         lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         lift2.setDirection(DcMotorEx.Direction.REVERSE);
-        PinL = hardwareMap(Servo.class, "pincer_left");
-        PinR = hardwareMap(Servo.class, "pincer_right");
+        PinL = hardwareMap.get(Servo.class, "pincer_left");
+        PinR = hardwareMap.get(Servo.class, "pincer_right");
         arm = (ServoImplEx) hardwareMap.get(Servo.class, "arm");
         bucket = hardwareMap.get(Servo.class, "bucket");
         outtake_lid = hardwareMap.get(Servo.class, "outtake_lid");
